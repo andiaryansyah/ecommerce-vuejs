@@ -11,14 +11,14 @@
             class="p-2 rounded-full bg-white shadow-md hover:bg-pink-100 text-pink-600 transition-colors"
             aria-label="Previous slide"
           >
-            <Icon icon="mdi:arrow-small-left" width="24" height="24" />
+            <Icon icon="line-md:arrow-small-left" width="24" height="24" />
           </button>
           <button
             @click="nextSlide"
             class="p-2 rounded-full bg-white shadow-md hover:bg-pink-100 text-pink-600 transition-colors"
             aria-label="Next slide"
           >
-            <Icon icon="mdi:arrow-small-right" width="24" height="24" />
+            <Icon icon="line-md:arrow-small-right" width="24" height="24" />
           </button>
         </nav>
       </header>
@@ -135,13 +135,6 @@ import {
   product5,
   product6,
   product7,
-  product8,
-  product9,
-  product10,
-  product11,
-  product12,
-  product13,
-  product14,
 } from "../assets/index.js";
 
 const currentSlide = ref(0);
