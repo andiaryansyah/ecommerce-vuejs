@@ -2,20 +2,20 @@
   <section class="py-12 scroll-mt-20 bg-gray-50" id="products">
     <main class="container mx-auto px-4">
       <header class="flex justify-between items-center mb-8">
-        <h2 class="md:text-3xl text-2xl font-bold text-amber-900">
+        <h2 class="md:text-3xl text-2xl font-bold text-heading">
           Featured Products
         </h2>
         <nav class="flex space-x-4" aria-label="Product carousel controls">
           <button
             @click="prevSlide"
-            class="p-2 rounded-full bg-white shadow-md hover:bg-pink-100 text-pink-600 transition-colors"
+            class="p-2 rounded-full bg-white shadow-md hover:bg-secondary text-primary transition-colors"
             aria-label="Previous slide"
           >
             <Icon icon="line-md:arrow-small-left" width="24" height="24" />
           </button>
           <button
             @click="nextSlide"
-            class="p-2 rounded-full bg-white shadow-md hover:bg-pink-100 text-pink-600 transition-colors"
+            class="p-2 rounded-full bg-white shadow-md hover:bg-secondary text-primary transition-colors"
             aria-label="Next slide"
           >
             <Icon icon="line-md:arrow-small-right" width="24" height="24" />
@@ -41,13 +41,13 @@
                 />
                 <figcaption
                   v-if="product.discount > 0"
-                  class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                  class="absolute top-3 right-3 bg-danger text-white text-xs font-bold px-2 py-1 rounded-full"
                 >
                   -{{ product.discount }}%
                 </figcaption>
 
                 <button
-                  class="absolute top-3 left-3 p-2 bg-white rounded-full shadow-md hover:bg-pink-100 text-gray-700"
+                  class="absolute top-3 left-3 p-2 bg-white rounded-full shadow-md hover:bg-secondary text-primary"
                   aria-label="Add to wishlist"
                 >
                   <Icon icon="line-md:heart" width="18" height="18" />
@@ -72,12 +72,12 @@
                     >({{ product.rating }})</span
                   >
                 </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                <h3 class="text-lg font-semibold text-heading mb-1">
                   {{ product.name }}
                 </h3>
                 <footer class="flex items-center justify-between">
                   <div>
-                    <span class="text-lg font-bold text-pink-600"
+                    <span class="text-lg font-bold text-secondary"
                       >${{
                         (product.price * (1 - product.discount / 100)).toFixed(
                           2,
@@ -91,7 +91,7 @@
                     >
                   </div>
                   <button
-                    class="p-2 bg-pink-950 text-white rounded-full hover:bg-pink-700 transition-colors"
+                    class="p-2 bg-primary text-white rounded-full hover:bg-primary-hover transition-colors"
                     aria-label="Add to cart"
                   >
                     <Icon
@@ -117,7 +117,7 @@
           @click="currentSlide = index - 1"
           :class="[
             'w-3 h-3 rounded-full',
-            currentSlide === index - 1 ? 'bg-pink-900' : 'bg-gray-400',
+            currentSlide === index - 1 ? 'bg-secondary' : 'bg-gray-400',
           ]"
         />
       </nav>

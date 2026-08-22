@@ -3,11 +3,11 @@
     <div class="container mx-auto px-4">
       <!-- Section Header -->
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-amber-950">
-          Explore Our Fragrance Collections
+        <h2 class="text-3xl font-bold text-heading">
+          Explore Our Shoes Collections
         </h2>
         <p class="text-gray-800 max-w-2xl mx-auto">
-          Discover scents that match your personality
+          Discover Our Stylish Footwear
         </p>
       </div>
 

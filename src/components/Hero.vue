@@ -6,9 +6,9 @@
       <!-- Left Content -->
       <div class="text-center lg:text-left max-w-xl">
         <h1
-          class="text-4xl sm:text-5xl font-bold text-amber-950 leading-tight mb-4"
+          class="text-4xl sm:text-5xl font-bold text-primary leading-tight mb-4"
         >
-          Discover the Best Products for Your Needs
+          Discover the Best Shoes for Your Style
         </h1>
         <p class="text-gray-700 text-base sm:text-lg mb-6">
           Exclusive discounts and special offers on all products. Find
@@ -18,12 +18,12 @@
         <div class="flex justify-center lg:justify-start gap-4">
           <a
             href="/products"
-            class="px-6 py-3 bg-pink-900 text-white text-sm font-semibold rounded-lg shadow hover:bg-pink-600 transition"
+            class="px-6 py-3 bg-primary text-white text-sm font-semibold rounded-lg shadow hover:bg-primary-hover transition"
             >Shop Now</a
           >
           <a
             href="/offers"
-            class="px-6 py-3 border border-pink-500 text-pink-600 text-sm font-semibold rounded-lg hover:bg-pink-200 transition"
+            class="px-6 py-3 text-white text-sm font-semibold rounded-lg bg-secondary hover:bg-secondary-hover transition"
             >View Offers</a
           >
         </div>

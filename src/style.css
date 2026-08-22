@@ -2,3 +2,65 @@
 html {
   scroll-behavior: smooth;
 }
+
+@theme {
+  /* =========================
+     BRAND
+     ========================= */
+  --color-primary: #172033;
+  --color-primary-hover: #25314a;
+
+  --color-secondary: #c8a96b;
+  --color-secondary-hover: #b8955a;
+
+  /* =========================
+     BACKGROUND
+     ========================= */
+  --color-background: #f8f6f0;
+  --color-background-hover: #f0ede4;
+
+  --color-surface: #ffffff;
+  --color-surface-hover: #f7f7f7;
+
+  --color-summer: #f4e7c1;
+
+  --color-whisper-blue: #e8ecf3;
+
+  --color-primary-gradient: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    #202b42 50%,
+    var(--color-primary-hover) 100%
+  );
+
+  --color-pastel-pink: #f7e1e5;
+  --color-deep-red: #a33a52;
+  /* =========================
+     TEXT
+     ========================= */
+  --color-heading: #1c1c1c;
+  --color-body: #667085;
+  --color-body-hover: #4b5563;
+  --color-summer-text: #8a6a2f;
+
+  /* =========================
+     BORDER
+     ========================= */
+  --color-paleSilver: #e5e7eb;
+  --color-border-hover: #cbd0d8;
+
+  /* =========================
+     STATUS
+     ========================= */
+  --color-success: #16a34a;
+  --color-success-hover: #15803d;
+
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+}
+
+.contact-section {
+  min-height: 100vh;
+  padding: 80px 20px;
+  background: var(--color-primary-gradient);
+}

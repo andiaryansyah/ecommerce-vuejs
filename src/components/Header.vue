@@ -14,9 +14,11 @@
         >
           <!-- LOGO + MOBILE MENU TOGGLE -->
           <div class="flex justify-between items-center w-full md:w-auto">
-            <a href="/" class="text-2xl font-bold text-pink-500">MyShopp</a>
+            <a href="/" class="text-2xl font-bold text-secondary"
+              >Haven Kicks</a
+            >
             <button
-              class="md:hidden text-gray-700 hover:text-indigo-600"
+              class="md:hidden text-gray-700 hover:text-secondary"
               aria-label="Toggle mobile menu"
               @click="isMobileMenuOpen = !isMobileMenuOpen"
             >
@@ -33,11 +35,11 @@
               <input
                 type="search"
                 placeholder="Search..."
-                class="w-full px-3 py-2 text-xs border border-gray-300 rounded-full focus:outline-none focusLring-2"
+                class="w-full px-3 py-2 text-xs border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
               />
               <button
                 type="submit"
-                class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600"
+                class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-secondary"
                 aria-label="Search Button"
               >
                 <Icon icon="mdi:magnify" class="w-4 h-4" />
@@ -49,30 +51,30 @@
             class="flex items-center justify-end space-x-4 w-full md:w-auto"
           >
             <button
-              class="relative p-2 text-gray-700 hover:text-pink-600"
+              class="relative p-2 text-gray-700 hover:text-secondary"
               aria-label="Wishlist"
             >
               <Icon icon="mdi:heart-outline" class="w-5 h-5" />
               <span
-                class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
               >
                 3
               </span>
             </button>
             <button
-              class="relative p-2 text-gray-700 hover:text-pink-600"
-              aria-label="Wishlist"
+              class="relative p-2 text-gray-700 hover:text-secondary"
+              aria-label="cart"
             >
               <Icon icon="mdi:cart-outline" class="w-5 h-5" />
               <span
-                class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
               >
                 5
               </span>
             </button>
             <button
-              class="relative p-2 text-gray-700 hover:text-pink-600"
-              aria-label="Wishlist"
+              class="relative p-2 text-gray-700 hover:text-secondary"
+              aria-label="account"
             >
               <Icon icon="mdi:account-outline" class="w-5 h-5" />
             </button>
@@ -82,13 +84,13 @@
     </section>
 
     <!-- Navbar Links -->
-    <nav class="bg-pink-950" aria-label="Main Navigation">
+    <nav class="bg-primary" aria-label="Main Navigation">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ul
           class="hidden md:flex justify-center py-3 flex-wrap gap-x-6 text-sm font-medium text-white"
         >
           <li v-for="item in navItems" :key="item.id">
-            <a :href="item.link" class="hover:text-pink-300 transition-colors">
+            <a :href="item.link" class="hover:text-secondary transition-colors">
               {{ item.name }}
             </a>
           </li>
@@ -96,14 +98,14 @@
 
         <section
           v-if="isMobileMenuOpen"
-          class="md:hidden mt-2 bg-white rounded-lg shadow-md p-4 space-y-3 text-[#5D4037] text-center"
+          class="md:hidden mt-2 bg-white rounded-lg shadow-md p-4 space-y-3 text-primary text-center"
           aria-label="Mobile navigation"
         >
           <a
             v-for="item in navItems"
             :href="item.link"
             :key="item.id"
-            class="block hover:text-amber-600 text-sm font-medium"
+            class="block hover:text-secondary text-sm font-medium"
           >
             {{ item.name }}
           </a>

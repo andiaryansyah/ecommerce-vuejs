@@ -1,9 +1,9 @@
 <template>
   <div id="offers" class="container scroll-mt-20 mx-auto px-4 p-12">
-    <h2 class="text-3xl font-bold text-center mb-2 text-amber-900">
+    <h2 class="text-3xl font-bold text-center mb-2 text-primary">
       Special Offers
     </h2>
-    <p class="text-center text-gray-600 mb-12">
+    <p class="text-center text-body mb-12">
       Take advantage of these limited-time offers
     </p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -68,8 +68,8 @@ const currentOffers = ref([
     discount: "30%",
     endDate: "2024-07-31",
     code: "SUMMER50",
-    bgColor: "bg-amber-200",
-    textColor: "text-amber-700",
+    bgColor: "bg-summer",
+    textColor: "text-summer-text",
   },
   {
     id: 2,
@@ -78,8 +78,8 @@ const currentOffers = ref([
     discount: "20%",
     endDate: "2024-08-31",
     code: "NEW20",
-    bgColor: "bg-purple-200",
-    textColor: "text-purple-700",
+    bgColor: "bg-whisper-blue",
+    textColor: "text-primary",
   },
   {
     id: 3,
@@ -88,8 +88,8 @@ const currentOffers = ref([
     discount: "70%",
     endDate: "2024-06-30",
     code: "FLASH70",
-    bgColor: "bg-pink-200",
-    textColor: "text-pink-700",
+    bgColor: "bg-pastel-pink",
+    textColor: "text-deep-red",
   },
 ]);
 </script>
