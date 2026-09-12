@@ -64,5 +64,5 @@
   </div>
 </template>
 <script setup>
-import { product } from "../assets";
+import { product } from "../../assets";
 </script>

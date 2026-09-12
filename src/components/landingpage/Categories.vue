@@ -50,44 +50,50 @@ import {
   product12,
   product13,
   product14,
-} from "../assets/index.js";
+} from "../../assets/index.js";
 
 const categories = ref([
   {
-    title: "Men's Collection",
-    description: "Bold and masculine scents for the modern man",
+    title: "Lifestyle",
+    description:
+      "Casual shoes for everyday activities, featuring a comfortable and modern design",
     image: product8,
-    alt: "Men's Collection",
+    alt: "Lifestyle",
   },
   {
-    title: "Woody",
-    description: "Earthy and warm fragrances.",
+    title: "Running",
+    description:
+      "Lightweight and responsive shoes for peak performance while running or working out.",
     image: product9,
-    alt: "Men's Collection",
+    alt: "Running",
   },
   {
-    title: "Fresh",
-    description: "Crisp and invigorating aromas.",
+    title: "Classic",
+    description:
+      "Timeless models with simple designs that remain elegant in any situation.",
     image: product10,
-    alt: "Men's Collection",
+    alt: "Classic",
   },
   {
-    title: "Oriental",
-    description: "Exotic and sensual notes.",
+    title: "Fashion",
+    description:
+      "Trendy shoes with a contemporary design touch to complete your look.",
     image: product11,
-    alt: "Men's Collection",
+    alt: "Fashion",
   },
   {
-    title: "Citrus",
-    description: "Zesty and uplifting scents.",
+    title: "Outdoor",
+    description:
+      "Rugged, highly durable shoes suitable for outdoor activities and adventures.",
     image: product12,
-    alt: "Men's Collection",
+    alt: "Outdoor",
   },
   {
-    title: "Gourmand",
-    description: "Sweet and edible-inspired fragrances.",
+    title: "Streetwear",
+    description:
+      "Urban-style shoes that reflect a free and expressive character on city streets.",
     image: product13,
-    alt: "Men's Collection",
+    alt: "Streetwear",
   },
 ]);
 

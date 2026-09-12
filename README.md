@@ -1,5 +1,48 @@
-# Vue 3 + Vite
+# Haven Kicks – Luxury Footwear Website
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A modern e-commerce platform for luxury shoes built with Vue.js frontend and Laravel backend.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+
+## ✨ Features
+- Responsive design with Vue.js
+- Dynamic product catalog
+- Secure API built with Laravel (on going)
+- Integrated payment gateway (on going)
+- Admin dashboard for product management (on going)
+
+
+## 🛠️ Tech Stack
+- **Frontend**: Vue.js, Tailwind CSS
+- **Backend**: Laravel 10
+- **Database**: MySQL
+- **Authentication**: Laravel Sanctum
+- **Build Tools**: Vite
+
+
+## 🚀 Installation
+### Frontend (Vue.js)
+1. Clone repository
+   ```bash
+   git clone https://github.com/andiaryansyah/ecommerce-vuejs.git
+2. Install dependencies 
+   ```bash
+   npm install 
+3. Run development server
+   ```bash
+   npm run dev
+
+### Backend (Laravel)
+1. Install dependencies 
+   ```bash
+   composer install 
+2. Setup environment
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+3. Run Migration
+   ```bash
+   php artisan migrate
+4. Run Server
+   ```bash
+   php artisan serve
+

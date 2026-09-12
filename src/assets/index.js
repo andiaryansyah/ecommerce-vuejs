@@ -13,6 +13,7 @@ import product11 from "./product11.jpg";
 import product12 from "./product12.jpg";
 import product13 from "./product13.jpg";
 import product14 from "./product14.jpg";
+import product15 from "./product15.jpg";
 
 export {
   product,
@@ -30,4 +31,5 @@ export {
   product12,
   product13,
   product14,
+  product15,
 };

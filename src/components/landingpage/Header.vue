@@ -82,36 +82,40 @@
         </div>
       </div>
     </section>
+    <div v-if="$route.path === '/'">
+      <!-- Navbar Links -->
+      <nav class="bg-primary" aria-label="Main Navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ul
+            class="hidden md:flex justify-center py-3 flex-wrap gap-x-6 text-sm font-medium text-white"
+          >
+            <li v-for="item in navItems" :key="item.id">
+              <a
+                :href="item.link"
+                class="hover:text-secondary transition-colors"
+              >
+                {{ item.name }}
+              </a>
+            </li>
+          </ul>
 
-    <!-- Navbar Links -->
-    <nav class="bg-primary" aria-label="Main Navigation">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ul
-          class="hidden md:flex justify-center py-3 flex-wrap gap-x-6 text-sm font-medium text-white"
-        >
-          <li v-for="item in navItems" :key="item.id">
-            <a :href="item.link" class="hover:text-secondary transition-colors">
+          <section
+            v-if="isMobileMenuOpen"
+            class="md:hidden mt-2 bg-white rounded-lg shadow-md p-4 space-y-3 text-primary text-center"
+            aria-label="Mobile navigation"
+          >
+            <a
+              v-for="item in navItems"
+              :href="item.link"
+              :key="item.id"
+              class="block hover:text-secondary text-sm font-medium"
+            >
               {{ item.name }}
             </a>
-          </li>
-        </ul>
-
-        <section
-          v-if="isMobileMenuOpen"
-          class="md:hidden mt-2 bg-white rounded-lg shadow-md p-4 space-y-3 text-primary text-center"
-          aria-label="Mobile navigation"
-        >
-          <a
-            v-for="item in navItems"
-            :href="item.link"
-            :key="item.id"
-            class="block hover:text-secondary text-sm font-medium"
-          >
-            {{ item.name }}
-          </a>
-        </section>
-      </div>
-    </nav>
+          </section>
+        </div>
+      </nav>
+    </div>
   </header>
 </template>
 <script setup>

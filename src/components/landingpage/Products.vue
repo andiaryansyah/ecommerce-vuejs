@@ -2,9 +2,19 @@
   <section class="py-12 scroll-mt-20 bg-gray-50" id="products">
     <main class="container mx-auto px-4">
       <header class="flex justify-between items-center mb-8">
-        <h2 class="md:text-3xl text-2xl font-bold text-heading">
-          Featured Products
-        </h2>
+        <div
+          class="flex flex-col md:flex-row md:items-center items-start space-x-4"
+        >
+          <h2 class="md:text-3xl text-2xl font-bold text-heading">
+            Featured Products
+          </h2>
+          <RouterLink
+            to="/products"
+            class="md:text-xl text-sm font-semibold text-secondary hover:text-secondary-hover transition md:mt-1"
+          >
+            View All →
+          </RouterLink>
+        </div>
         <nav class="flex space-x-4" aria-label="Product carousel controls">
           <button
             @click="prevSlide"
@@ -34,11 +44,13 @@
           >
             <article>
               <figure class="relative">
-                <img
-                  :src="product.image"
-                  :alt="product.name"
-                  class="w-full h-64 object-cover"
-                />
+                <router-link :to="`/products/${product.slug}`">
+                  <img
+                    :src="product.image[0]"
+                    :alt="product.name"
+                    class="w-full h-64 object-cover"
+                  />
+                </router-link>
                 <figcaption
                   v-if="product.discount > 0"
                   class="absolute top-3 right-3 bg-danger text-white text-xs font-bold px-2 py-1 rounded-full"
@@ -126,94 +138,20 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import {
-  product,
-  product1,
-  product2,
-  product3,
-  product4,
-  product5,
-  product6,
-  product7,
-} from "../assets/index.js";
+import { products } from "../../data/products.js";
 
 const currentSlide = ref(0);
 const productsPerPage = ref(4);
 
-const products = [
-  {
-    id: 1,
-    name: "Verawang for Men",
-    price: 19.99,
-    rating: 4.5,
-    image: product,
-    discount: 20,
-  },
-  {
-    id: 2,
-    name: "Gentleman Givenchy",
-    price: 39.99,
-    rating: 4.6,
-    image: product1,
-    discount: 10,
-  },
-  {
-    id: 3,
-    name: "di Gioia",
-    price: 29.99,
-    rating: 4.6,
-    image: product2,
-    discount: 0,
-  },
-  {
-    id: 4,
-    name: "Versace Eros",
-    price: 39.99,
-    rating: 4.5,
-    image: product3,
-    discount: 12,
-  },
-  {
-    id: 5,
-    name: "Prada",
-    price: 19.99,
-    rating: 4.8,
-    image: product4,
-    discount: 5,
-  },
-  {
-    id: 6,
-    name: "Coco Noir Chanel",
-    price: 49.99,
-    rating: 4.7,
-    image: product5,
-    discount: 15,
-  },
-  {
-    id: 7,
-    name: "Blue de Chanel",
-    price: 29.99,
-    rating: 4.4,
-    image: product6,
-    discount: 8,
-  },
-  {
-    id: 8,
-    name: "Zara",
-    price: 19.99,
-    rating: 4.6,
-    image: product7,
-    discount: 25,
-  },
-];
+const limitedProducts = products.slice(0, 8);
 
 const totalSlides = computed(() =>
-  Math.ceil(products.length / productsPerPage.value),
+  Math.ceil(limitedProducts.length / productsPerPage.value),
 );
 
 const visibleProducts = computed(() => {
   const start = currentSlide.value * productsPerPage.value;
-  return products.slice(start, start + productsPerPage.value);
+  return limitedProducts.slice(start, start + productsPerPage.value);
 });
 
 const nextSlide = () => {
