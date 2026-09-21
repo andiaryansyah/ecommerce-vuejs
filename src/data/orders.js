@@ -1,0 +1,55 @@
+import {
+  product1,
+  product4,
+  product8,
+  product9,
+  product15,
+} from "../assets/index.js";
+
+export const orders = [
+  {
+    name: "Nike Zoom Green",
+    category: "sport",
+    subCategory: "running",
+    price: 29.99,
+    discount: 10,
+    status: "Delivered",
+    image: product1,
+  },
+  {
+    name: "Vans Classic Maroon",
+    category: "casual",
+    subCategory: "lifestyle",
+    price: 19.99,
+    discount: 5,
+    status: "Pending",
+    image: product4,
+  },
+  {
+    name: "Puma Smash White",
+    category: "casual",
+    subCategory: "lifestyle",
+    price: 19.99,
+    discount: 25,
+    status: "Delivered",
+    image: product8,
+  },
+  {
+    name: "Puma RS-X Black Pink",
+    category: "sport",
+    subCategory: "running",
+    price: 19.99,
+    discount: 25,
+    status: "Canceled",
+    image: product9,
+  },
+  {
+    name: "New Balance 574 Olive Green",
+    category: "casual",
+    subCategory: "outdoor",
+    price: 19.99,
+    discount: 25,
+    status: "Delivered",
+    image: product15,
+  },
+];

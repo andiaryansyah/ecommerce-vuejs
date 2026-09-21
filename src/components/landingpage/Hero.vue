@@ -32,7 +32,7 @@
       <!-- Right Image -->
       <div class="w-full lg:w-1/2 flex justify-center">
         <img
-          src="../assets/hero.jpg"
+          src="@/assets/hero.jpg"
           alt="Hero Product"
           class="w-3/4 lg:w-full max-w-md rounded-lg shadow-lg"
         />

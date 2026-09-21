@@ -163,9 +163,9 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
-import { products } from "../../data/products.js";
-import NoData from "../../components/landingpage/NoData.vue";
-import Footer from "../../components/landingpage/Footer.vue";
+import { products } from "@/data/products.js";
+import NoData from "@/components/shared/NoData.vue";
+import Footer from "@/components/landingpage/Footer.vue";
 
 const currentSlide = ref(0);
 const productsPerPage = ref(4);

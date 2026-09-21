@@ -1,0 +1,76 @@
+export const menuItems = [
+  {
+    icon: "grommet-icons:overview",
+    label: "Overview",
+    visible: ["admin"],
+    href: "/admin",
+    subItems: [],
+  },
+  {
+    icon: "carbon:order-server",
+    label: "Orders",
+    visible: ["admin"],
+    href: "/orders",
+    subItems: [],
+  },
+  {
+    icon: "carbon:product",
+    label: "Products",
+    visible: ["admin"],
+    href: "/myproducts",
+    subItems: [],
+  },
+  {
+    icon: "carbon:user-multiple",
+    label: "Customers",
+    visible: ["admin"],
+    href: "/customers",
+    subItems: [],
+  },
+  {
+    icon: "basil:invoice-outline",
+    label: "Invoices",
+    visible: ["admin"],
+    href: "/invoices",
+    subItems: [],
+  },
+  {
+    icon: "codicon:account",
+    label: "My Account",
+    visible: ["user"],
+    subItems: [
+      { label: "Profile", href: "/account/profile" },
+      { label: "Banks & Cards", href: "/account/payment" },
+      { label: "Addresses", href: "/account/address" },
+      { label: "Change Password", href: "/account/password" },
+      { label: "Notification Settings", href: "/account/notifications" },
+      { label: "Privacy Settings", href: "/account/privacy" },
+    ],
+  },
+  {
+    icon: "bx:purchase-tag",
+    label: "My Purchase",
+    href: "/purchase",
+    visible: ["user"],
+    subItems: [],
+  },
+  {
+    icon: "basil:notification-on-outline",
+    label: "Notifications",
+    visible: ["user"],
+    subItems: [
+      {
+        icon: "/home.png",
+        label: "Order Updates",
+        href: "/notifications/order",
+      },
+    ],
+  },
+  {
+    icon: "arcticons:settings",
+    label: "Settings",
+    visible: ["admin", "user"],
+    href: "/settings",
+    subItems: [],
+  },
+];

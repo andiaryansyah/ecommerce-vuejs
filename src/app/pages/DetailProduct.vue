@@ -142,7 +142,7 @@
 import { useRoute } from "vue-router";
 import { products } from "../../data/products.js";
 import { ref, computed } from "vue";
-import Footer from "../../components/landingpage/Footer.vue";
+import Footer from "@/components/landingpage/Footer.vue";
 
 const route = useRoute();
 const slug = route.params.slug;
