@@ -17,7 +17,7 @@
       <TableProducts
         :products="initialProducts"
         @edit="openEdit"
-        @delete="deleteProduct"
+        @delete="toastDelete"
       />
     </div>
   </div>
@@ -30,10 +30,23 @@
     @close="isOpen = false"
     @saved="handleSaved"
   />
+
+  <DialogMessage
+    :isOpen="toastOpen"
+    title="Confirm"
+    text="Are you sure you want to delete this product?"
+    @confirm="deleteProduct"
+    @cancel="toastOpen = false"
+  />
+
+  <Toast />
 </template>
 <script setup>
 import ProductFormModal from "../../components/dashboard/ProductFormModal.vue";
 import TableProducts from "../../components/dashboard/TableProducts.vue";
+import Toast from "../../components/shared/Toast.vue";
+import DialogMessage from "../../components/shared/DialogMessage.vue";
+import { useToast } from "../../composables/useToast.js";
 import { products } from "../../data/products.js";
 import { ref } from "vue";
 
@@ -41,6 +54,10 @@ const initialProducts = ref([...products]);
 const isOpen = ref(false);
 const mode = ref("add");
 const selectedProduct = ref(null);
+const selectToDeleted = ref(null);
+
+const toastOpen = ref(false);
+const { showToast } = useToast();
 
 const openAdd = () => {
   mode.value = "add";
@@ -57,15 +74,23 @@ const openEdit = (item) => {
 const handleSaved = (product) => {
   if (product.mode === "add") {
     initialProducts.value.push(product);
+    showToast("Product saved successfully!", "success");
   } else {
     const idx = initialProducts.value.findIndex((p) => p.name === product.name);
     if (idx !== -1) initialProducts.value[idx] = product;
+    showToast("Product updated successfully!", "info");
   }
 };
+const toastDelete = (item) => {
+  selectToDeleted.value = item;
+  toastOpen.value = true;
+};
 
-const deleteProduct = (item) => {
+const deleteProduct = () => {
   initialProducts.value = initialProducts.value.filter(
-    (p) => p.name !== item.name,
+    (p) => p.name !== selectToDeleted.value.name,
   );
+  toastOpen.value = false;
+  showToast("Product deleted successfully!", "error");
 };
 </script>

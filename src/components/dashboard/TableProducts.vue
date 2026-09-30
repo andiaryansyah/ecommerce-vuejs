@@ -6,6 +6,7 @@
         <th class="py-2">Price</th>
         <th class="py-2">Rating</th>
         <th class="py-2">Discount</th>
+        <th class="py-2">Stock</th>
         <th class="hidden lg:table-cell py-2">Category</th>
         <th class="hidden lg:table-cell py-2">Sub Category</th>
         <th class="py-2">Action</th>
@@ -25,7 +26,14 @@
           />
           <p class="font-semibold">{{ item.name }}</p>
         </td>
-        <td class="py-3 text-primary">{{ item.price }}</td>
+        <td class="py-3 text-primary">
+          <p class="font-semibold">
+            ${{ (item.price * (1 - item.discount / 100)).toFixed(2) }}
+          </p>
+          <p v-if="item.discount > 0" class="text-gray-500 line-through">
+            ${{ item.price.toFixed(2) }}
+          </p>
+        </td>
         <td class="py-3 text-primary">
           <div class="flex gap-1 justify-center items-center">
             <Icon icon="ant-design:star-filled" class="w-5 h-5 text-gray-700" />
@@ -40,6 +48,9 @@
               {{ item.discount }} %
             </p>
           </div>
+        </td>
+        <td class="py-3 text-primary hidden lg:table-cell capitalize">
+          {{ item.stock }}
         </td>
         <td class="py-3 text-primary hidden lg:table-cell capitalize">
           {{ item.category }}
@@ -81,9 +92,22 @@
       />
       <div class="flex-1">
         <p class="font-semibold">{{ item.name }}</p>
-        <p class="text-sm text-gray-400">
-          Price: {{ item.price }} | Rating: {{ item.rating }}
-        </p>
+        <div class="flex items-center gap-2 text-sm">
+          <p class="font-semibold">
+            ${{ (item.price * (1 - item.discount / 100)).toFixed(2) }}
+          </p>
+          <p v-if="item.discount > 0" class="text-gray-500 line-through">
+            ${{ item.price.toFixed(2) }}
+          </p>
+        </div>
+        <div class="text-sm text-gray-400 flex items-start gap-2">
+          <p class="text-center text-sm">Stock: {{ item.stock }}</p>
+          |
+          <div class="flex gap-1 justify-center items-center">
+            <Icon icon="ant-design:star-filled" class="w-3 h-3 text-gray-700" />
+            <p class="text-center text-sm">{{ item.rating }}</p>
+          </div>
+        </div>
       </div>
       <div class="flex gap-2">
         <button class="cursor-pointer" @click="emit('edit', item)">

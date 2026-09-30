@@ -200,28 +200,48 @@ const form = ref({
   description: "",
 });
 
-// isi form otomatis saat edit
+const resetForm = () => {
+  // bersihkan blob URL lama
+  form.value.image.forEach((img) => {
+    if (img.startsWith("blob:")) {
+      URL.revokeObjectURL(img);
+    }
+  });
+
+  // reset semua field
+  form.value = {
+    id: "",
+    name: "",
+    price: "",
+    rating: "",
+    image: [],
+    discount: "",
+    category: "",
+    subCategory: "",
+    slug: "",
+    description: "",
+  };
+};
+
 watch(
   () => props.product,
   (newVal) => {
     if (props.mode === "edit" && newVal) {
       form.value = { ...newVal };
     } else {
-      form.value = {
-        id: "",
-        name: "",
-        price: "",
-        rating: "",
-        image: [],
-        discount: "",
-        category: "",
-        subCategory: "",
-        slug: "",
-        description: "",
-      };
+      resetForm();
     }
   },
   { immediate: true },
+);
+
+watch(
+  () => props.isOpen,
+  (open) => {
+    if (!open) {
+      resetForm();
+    }
+  },
 );
 
 const handleImageUpload = (event) => {

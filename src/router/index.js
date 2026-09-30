@@ -7,6 +7,7 @@ import Admin from "../app/dashboard/Admin.vue";
 import DataProducts from "../app/dashboard/DataProducts.vue";
 import Orders from "../app/dashboard/Orders.vue";
 import Profile from "../app/dashboard/Profile.vue";
+import DataCustomers from "../app/dashboard/DataCustomers.vue";
 
 const routes = [
   { path: "/", name: "LandingPage", component: LandingPage },
@@ -25,6 +26,11 @@ const routes = [
         path: "/myproducts",
         name: "Data Products",
         component: DataProducts,
+      },
+      {
+        path: "/customers",
+        name: "Data Customers",
+        component: DataCustomers,
       },
       {
         path: "/orders",

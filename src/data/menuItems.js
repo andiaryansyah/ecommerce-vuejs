@@ -29,9 +29,9 @@ export const menuItems = [
   },
   {
     icon: "basil:invoice-outline",
-    label: "Invoices",
+    label: "Payments",
     visible: ["admin"],
-    href: "/invoices",
+    href: "/payments",
     subItems: [],
   },
   {

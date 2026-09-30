@@ -28,6 +28,7 @@ export const products = [
     category: "sport",
     subCategory: "running",
     slug: "nike-flyknit-red",
+    stock: 18,
     description:
       " lightweight running shoe engineered for speed and comfort. Its breathable Flyknit upper adapts to the shape of your foot, delivering a snug yet flexible fit. The vibrant red design with the iconic white Nike swoosh adds bold style to your performance, while the cushioned midsole ensures responsive support during every stride. Durable traction on the outsole provides stability, making it ideal for both training sessions and everyday wear.",
   },
@@ -41,6 +42,7 @@ export const products = [
     category: "sport",
     subCategory: "running",
     slug: "nike-zoom-green",
+    stock: 18,
     description:
       "A high-performance running shoe designed for speed and agility. The vibrant green upper is crafted from lightweight, breathable materials that provide a snug fit while allowing for optimal airflow. The responsive Zoom Air cushioning in the midsole delivers excellent energy return, making each stride feel effortless. With its durable rubber outsole and sleek design, this shoe is perfect for runners seeking both style and functionality.",
   },
@@ -54,6 +56,7 @@ export const products = [
     category: "casual",
     subCategory: "lifestyle",
     slug: "nike-air-brown",
+    stock: 18,
     description:
       "A stylish and versatile sneaker that combines comfort and fashion. The rich brown leather upper offers a classic look, while the cushioned midsole provides all-day comfort for casual wear. The durable rubber outsole ensures reliable traction, making it suitable for various surfaces. With its timeless design and attention to detail, this shoe is perfect for those who want to make a statement while staying comfortable.",
   },
@@ -67,6 +70,7 @@ export const products = [
     category: "casual",
     subCategory: "classic",
     slug: "nike-air-force-white",
+    stock: 18,
     description:
       "A classic sneaker that has stood the test of time, the Nike Air Force White is a must-have for any footwear collection. Featuring a clean white leather upper with iconic perforations for breathability, this shoe offers both style and comfort. The cushioned midsole provides excellent support, while the durable rubber outsole ensures long-lasting wear. Perfect for casual outings or pairing with your favorite streetwear, the Nike Air Force White is a timeless choice.",
   },
@@ -80,6 +84,7 @@ export const products = [
     category: "casual",
     subCategory: "lifestyle",
     slug: "vans-classic-maroon",
+    stock: 18,
     description:
       "A timeless skate shoe that combines comfort and style. The maroon canvas upper is durable and flexible, providing a snug fit for all-day wear. The padded collar and cushioned insole offer added comfort, while the signature waffle rubber outsole delivers excellent grip and traction. With its classic design and versatile color, the Vans Classic Maroon is perfect for casual outings, skateboarding, or adding a pop of color to your everyday look.",
   },
@@ -93,6 +98,7 @@ export const products = [
     category: "casual",
     subCategory: "streetwear",
     slug: "vans-old-skool-green",
+    stock: 18,
     description:
       "A classic skate shoe that combines style and performance. The green suede and canvas upper provides durability and a comfortable fit, while the iconic side stripe adds a touch of retro flair. The padded collar and cushioned insole ensure all-day comfort, making it perfect for skateboarding or casual wear. The vulcanized rubber outsole offers excellent grip and traction, allowing you to confidently navigate any terrain. With its timeless design and versatile color, the Vans Old Skool Green is a must-have for sneaker enthusiasts.",
   },
@@ -106,6 +112,7 @@ export const products = [
     category: "casual",
     subCategory: "streetwear",
     slug: "vans-old-skool-black",
+    stock: 18,
     description:
       "A classic skate shoe that combines style and performance. The black suede and canvas upper provides durability and a comfortable fit, while the iconic side stripe adds a touch of retro flair. The padded collar and cushioned insole ensure all-day comfort, making it perfect for skateboarding or casual wear. The vulcanized rubber outsole offers excellent grip and traction, allowing you to confidently navigate any terrain. With its timeless design and versatile color, the Vans Old Skool Black is a must-have for sneaker enthusiasts.",
   },
@@ -119,6 +126,7 @@ export const products = [
     category: "casual",
     subCategory: "fashion",
     slug: "vans-old-skool-pink",
+    stock: 18,
     description:
       "A classic skate shoe that combines style and performance. The pink suede and canvas upper provides durability and a comfortable fit, while the iconic side stripe adds a touch of retro flair. The padded collar and cushioned insole ensure all-day comfort, making it perfect for skateboarding or casual wear. The vulcanized rubber outsole offers excellent grip and traction, allowing you to confidently navigate any terrain. With its timeless design and versatile color, the Vans Old Skool Pink is a must-have for sneaker enthusiasts.",
   },
@@ -132,6 +140,7 @@ export const products = [
     category: "casual",
     subCategory: "lifestyle",
     slug: "puma-smash-white",
+    stock: 18,
     description:
       "A timeless sneaker inspired by classic tennis style. Featuring a clean white upper with subtle Puma branding, it delivers a versatile look that pairs effortlessly with casual outfits. The soft materials and cushioned sole provide all‑day comfort, while the durable rubber outsole ensures reliable traction. Sleek, minimal, and easy to wear, this shoe is perfect for everyday streetwear or a sporty lifestyle.",
   },
@@ -145,6 +154,7 @@ export const products = [
     category: "sport",
     subCategory: "running",
     slug: "puma-rs-x-black-pink",
+    stock: 18,
     description:
       "A bold and futuristic running shoe that combines style and performance. The black upper with pink accents creates a striking contrast, while the lightweight materials provide a comfortable fit. The responsive cushioning in the midsole ensures excellent energy return, making each stride feel effortless. With its durable rubber outsole and eye-catching design, this shoe is perfect for runners seeking both fashion and functionality.",
   },
@@ -158,6 +168,7 @@ export const products = [
     category: "casual",
     subCategory: "classic",
     slug: "puma-suede-maroon",
+    stock: 18,
     description:
       "A classic sneaker that combines timeless style with modern comfort. The maroon suede upper offers a rich, luxurious look, while the cushioned midsole provides all-day comfort for casual wear. The durable rubber outsole ensures reliable traction, making it suitable for various surfaces. With its iconic design and attention to detail, the Puma Suede Maroon is perfect for those who want to make a statement while staying comfortable.",
   },
@@ -171,6 +182,7 @@ export const products = [
     category: "sport",
     subCategory: "running",
     slug: "puma-velocity-nitro-black",
+    stock: 18,
     description:
       "A high-performance running shoe designed for speed and agility. The black upper is crafted from lightweight, breathable materials that provide a snug fit while allowing for optimal airflow. The responsive Nitro cushioning in the midsole delivers excellent energy return, making each stride feel effortless. With its durable rubber outsole and sleek design, this shoe is perfect for runners seeking both style and functionality.",
   },
@@ -184,6 +196,7 @@ export const products = [
     category: "sport",
     subCategory: "running",
     slug: "new-balance-fuelcell-black-orange",
+    stock: 18,
     description:
       "A cutting-edge running shoe that combines speed, comfort, and style. The black upper with orange accents creates a bold look, while the lightweight materials provide a comfortable fit. The FuelCell cushioning in the midsole delivers excellent energy return, making each stride feel effortless. With its durable rubber outsole and sleek design, this shoe is perfect for runners seeking both fashion and functionality.",
   },
@@ -197,6 +210,7 @@ export const products = [
     category: "casual",
     subCategory: "lifestyle",
     slug: "new-balance-990v5-grey",
+    stock: 18,
     description:
       "A premium lifestyle sneaker that combines classic design with modern comfort. The grey upper is crafted from high-quality materials, providing a stylish and versatile look. The cushioned midsole ensures all-day comfort, while the durable rubber outsole offers reliable traction. With its timeless design and attention to detail, the New Balance 990v5 Grey is perfect for those who want to make a statement while staying comfortable.",
   },
@@ -210,6 +224,7 @@ export const products = [
     category: "casual",
     subCategory: "fashion",
     slug: "new-balance-327-pink-white",
+    stock: 18,
     description:
       "A stylish and versatile sneaker that combines retro design with modern comfort. The pink and white upper offers a fresh and eye-catching look, while the cushioned midsole provides all-day comfort for casual wear. The durable rubber outsole ensures reliable traction, making it suitable for various surfaces. With its unique design and attention to detail, the New Balance 327 Pink White is perfect for those who want to make a statement while staying comfortable.",
   },
@@ -223,6 +238,7 @@ export const products = [
     category: "casual",
     subCategory: "outdoor",
     slug: "new-balance-574-olive-green",
+    stock: 18,
     description:
       "A rugged and stylish sneaker that combines classic design with outdoor functionality. The olive green upper is crafted from durable materials, providing a versatile and earthy look. The cushioned midsole ensures all-day comfort, while the durable rubber outsole offers excellent traction on various terrains. With its timeless design and attention to detail, the New Balance 574 Olive Green is perfect for those who want to explore the outdoors in style.",
   },
