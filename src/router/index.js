@@ -8,10 +8,12 @@ import DataProducts from "../app/dashboard/DataProducts.vue";
 import Orders from "../app/dashboard/Orders.vue";
 import Profile from "../app/dashboard/Profile.vue";
 import DataCustomers from "../app/dashboard/DataCustomers.vue";
+import Categories from "../app/dashboard/Categories.vue";
+import Payments from "../app/dashboard/Payments.vue";
 
 const routes = [
   { path: "/", name: "LandingPage", component: LandingPage },
-  { path: "/products", name: "ProductList", component: ProductList },
+  { path: "/products-list", name: "ProductList", component: ProductList },
   { path: "/products/:slug", name: "DetailProduct", component: DetailProduct },
   {
     path: "/:role",
@@ -23,9 +25,14 @@ const routes = [
         component: Admin,
       },
       {
-        path: "/myproducts",
+        path: "/products",
         name: "Data Products",
         component: DataProducts,
+      },
+      {
+        path: "/products/product-categories",
+        name: "Categories",
+        component: Categories,
       },
       {
         path: "/customers",
@@ -36,6 +43,11 @@ const routes = [
         path: "/orders",
         name: "Orders",
         component: Orders,
+      },
+      {
+        path: "/payments",
+        name: "Payments",
+        component: Payments,
       },
       {
         path: "/account/profile",

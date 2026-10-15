@@ -22,7 +22,8 @@
             @click="emit('confirm')"
             class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
           >
-            Yes
+            <Loading v-if="loading" />
+            <span v-else>Yes</span>
           </button>
         </div>
       </div>
@@ -31,10 +32,12 @@
 </template>
 
 <script setup>
+import Loading from "./Loading.vue";
 const props = defineProps({
   isOpen: Boolean,
   text: String,
   title: String,
+  loading: { type: Boolean, default: false },
 });
 const emit = defineEmits(["confirm", "cancel"]);
 </script>

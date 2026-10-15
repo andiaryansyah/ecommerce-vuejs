@@ -7,24 +7,26 @@ export const menuItems = [
     subItems: [],
   },
   {
-    icon: "carbon:order-server",
-    label: "Orders",
-    visible: ["admin"],
-    href: "/orders",
-    subItems: [],
-  },
-  {
     icon: "carbon:product",
     label: "Products",
     visible: ["admin"],
-    href: "/myproducts",
-    subItems: [],
+    subItems: [
+      { label: "Product List", href: "/products" },
+      { label: "Categories", href: "/products/product-categories" },
+    ],
   },
   {
     icon: "carbon:user-multiple",
     label: "Customers",
     visible: ["admin"],
     href: "/customers",
+    subItems: [],
+  },
+  {
+    icon: "carbon:order-server",
+    label: "Orders",
+    visible: ["admin"],
+    href: "/orders",
     subItems: [],
   },
   {

@@ -10,4 +10,13 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://strudel-elude-umpire.ngrok-free.dev",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

@@ -9,113 +9,164 @@
   >
     <div
       v-if="isOpen"
-      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
     >
       <div
         class="bg-white rounded-xl shadow-lg w-[90%] md:w-150 relative max-h-[90vh] overflow-y-auto"
       >
-        <!-- Header -->
         <div
           class="sticky top-0 bg-white z-10 flex justify-between items-center mb-4 border-b border-gray-200 pb-2 shadow-sm p-6"
         >
-          <h2 class="text-xl font-semibold text-gray-800">
-            {{ mode === "add" ? "Add New Product" : "Edit Product" }}
+          <h2 class="text-xl font-semibold">
+            {{ mode === "edit" ? "Edit" : "Add New" }} Product
           </h2>
           <button
-            @click="emit('close')"
-            class="text-gray-500 hover:text-gray-700 transition cursor-pointer"
+            @click="$emit('close')"
+            class="text-gray-500 hover:text-black text-2xl cursor-pointer transition duration-200"
           >
-            <Icon icon="mdi:close" class="w-6 h-6" />
+            &times;
           </button>
         </div>
 
-        <!-- Form -->
-        <form @submit.prevent="handleSubmit" class="space-y-4 p-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Name</label>
+        <form @submit.prevent="handleSubmit" class="p-5 space-y-4">
+          <!-- Name -->
+          <div class="text-sm">
+            <label class="block font-medium">Name</label>
             <input
               v-model="form.name"
-              type="text"
-              class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              placeholder="Enter product name"
+              placeholder="Nike Air Force White"
+              class="mt-1 w-full border-gray-300 border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               required
             />
           </div>
 
-          <div class="grid grid-cols-3 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Price</label
-              >
+          <!-- Price + Disc -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-sm">
+              <label class="block font-medium">Price</label>
               <input
-                v-model="form.price"
+                v-model.number="form.price"
                 type="number"
-                class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                step="0.01"
                 placeholder="e.g. 49.99"
+                class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
                 required
               />
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Disc (%)</label
-              >
+            <div class="text-sm">
+              <label class="block font-medium">Disc (%)</label>
               <input
-                v-model="form.discount"
+                v-model.number="form.discount_percent"
                 type="number"
-                class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                min="0"
+                max="100"
                 placeholder="e.g. 10"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Rating</label
-              >
-              <input
-                v-model="form.rating"
-                type="number"
                 class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
-                placeholder="e.g. 5"
-                required
               />
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Category</label
-              >
+          <!-- Brand + Category -->
+          <div class="grid grid-cols-3 gap-4">
+            <div class="text-sm">
+              <label class="block font-medium">Brand</label>
               <input
-                v-model="form.category"
-                type="text"
+                v-model="form.brand"
+                placeholder="e.g. Nike"
                 class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
-                placeholder="e.g. Sport"
               />
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Sub Category</label
-              >
-              <input
-                v-model="form.subCategory"
-                type="text"
+            <div class="text-sm">
+              <label class="block font-medium">Category</label>
+              <select
+                v-model="selectedParentId"
                 class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
-                placeholder="e.g. Running"
-              />
+              >
+                <option value="" class="text-gray-300" hidden selected>
+                  -- Choose --
+                </option>
+                <option
+                  v-for="cat in parentCategories"
+                  :key="cat.id"
+                  :value="cat.id"
+                >
+                  {{ capitalizeFirstLetter(cat.name) }}
+                </option>
+              </select>
+            </div>
+            <div class="text-sm">
+              <label class="hidden md:block font-medium">Sub Category</label>
+              <label class="block md:hidden font-medium">Sub</label>
+              <select
+                v-model="form.category_id"
+                :disabled="!selectedParentId"
+                class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+              >
+                <option value="" hidden selected>-- Choose --</option>
+                <option
+                  v-for="sub in filteredSubs"
+                  :key="sub.id"
+                  :value="sub.id"
+                >
+                  {{ capitalizeFirstLetter(sub.name) }}
+                </option>
+              </select>
             </div>
           </div>
-          <div></div>
-          <div class="grid grid-cols-2 items-center gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Images</label
+
+          <!-- VARIANTS - INI YANG KURANG TADI -->
+          <div class="border rounded-lg border-gray-300 p-3 bg-gray-50 text-sm">
+            <div class="flex justify-between items-center mb-2">
+              <label class="font-medium">Variants (Size & Stock)</label>
+              <button
+                type="button"
+                @click="addVariant"
+                class="bg-white border border-gray-300 px-3 py-1 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-emerald-500"
               >
+                + Add Size
+              </button>
+            </div>
+            <div
+              v-for="(v, i) in form.variants"
+              :key="i"
+              class="grid grid-cols-12 gap-2 mb-2"
+            >
+              <input
+                v-model="v.size"
+                placeholder="Size 40"
+                class="col-span-5 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+              <input
+                v-model.number="v.stock"
+                type="number"
+                min="0"
+                placeholder="Stock 5"
+                class="col-span-5 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+              <button
+                type="button"
+                @click="removeVariant(i)"
+                class="col-span-2 bg-red-50 text-red-600 rounded-lg focus:ring-2 focus:ring-emerald-500"
+              >
+                X
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Total Stock: {{ totalStock }} (otomatis dihitung backend)
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 items-center gap-4 text-sm">
+            <div>
+              <label class="block font-medium text-gray-700">Images</label>
               <input
                 type="file"
                 @change="handleImageUpload"
                 :disabled="form.image.length >= 5"
                 :class="[
-                  'mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500',
+                  'text-sm mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500',
                   form.image.length >= 5
                     ? 'cursor-not-allowed'
                     : 'cursor-pointer',
@@ -128,48 +179,57 @@
                 {{ form.image.length }}/5 images uploaded
               </p>
             </div>
-          </div>
-
-          <div class="flex flex-wrap gap-2 mt-3">
-            <div
-              v-for="(img, idx) in form.image"
-              :key="idx"
-              class="relative w-12 h-12 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200"
-            >
-              <img
-                :src="img"
-                class="w-12 h-12 object-cover rounded-lg border shadow-sm"
-              />
-              <button
-                type="button"
-                @click="removeImage(idx)"
-                class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-700 cursor-pointer"
+            <div class="flex flex-wrap gap-2 mt-3">
+              <div
+                v-for="(img, idx) in form.image"
+                :key="idx"
+                class="relative w-12 h-12 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200"
               >
-                ×
-              </button>
+                <img
+                  :src="img"
+                  class="w-12 h-12 object-cover rounded-lg border shadow-sm"
+                />
+                <button
+                  type="button"
+                  @click="removeImage(idx)"
+                  class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-700 cursor-pointer"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Description</label
-            >
+          <!-- Description -->
+          <div class="text-sm">
+            <label class="block font-medium">Description</label>
             <textarea
               v-model="form.description"
-              type="text"
-              rows="5"
+              rows="3"
+              placeholder="Deskripsi produk..."
               class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
-              placeholder="Description"
-            />
+            ></textarea>
           </div>
 
-          <!-- Submit Button -->
-          <div class="flex justify-end mt-6">
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              @click="$emit('close')"
+              class="px-4 py-2 border rounded-lg text-sm"
+              :disabled="loading"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
-              class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg transition cursor-pointer"
+              :disabled="loading"
+              class="px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm disabled:opacity-50 flex items-center gap-2"
             >
-              {{ mode === "add" ? "Save Product" : "Update Product" }}
+              <span
+                v-if="loading"
+                class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+              ></span>
+              {{ loading ? "Saving..." : isEdit ? "Update" : "Save" }}
             </button>
           </div>
         </form>
@@ -177,89 +237,121 @@
     </div>
   </transition>
 </template>
+
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps({
   isOpen: Boolean,
-  mode: { type: String, default: "add" },
-  product: { type: Object, default: null },
+  mode: String,
+  product: Object,
+  categories: { type: Array, default: () => [] }, // <-- terima dari parent
+  loading: { type: Boolean, default: false },
 });
 const emit = defineEmits(["close", "saved"]);
 
+const selectedParentId = ref("");
+const imageFiles = ref([]);
+
 const form = ref({
-  id: "",
   name: "",
   price: "",
-  rating: "",
   image: [],
-  discount: "",
-  category: "",
-  subCategory: "",
-  slug: "",
+  discount_percent: 0,
+  brand: "",
+  category_id: "",
   description: "",
+  variants: [{ size: "40", stock: 5 }],
 });
 
-const resetForm = () => {
-  // bersihkan blob URL lama
-  form.value.image.forEach((img) => {
-    if (img.startsWith("blob:")) {
-      URL.revokeObjectURL(img);
-    }
-  });
-
-  // reset semua field
-  form.value = {
-    id: "",
-    name: "",
-    price: "",
-    rating: "",
-    image: [],
-    discount: "",
-    category: "",
-    subCategory: "",
-    slug: "",
-    description: "",
-  };
-};
-
-watch(
-  () => props.product,
-  (newVal) => {
-    if (props.mode === "edit" && newVal) {
-      form.value = { ...newVal };
-    } else {
-      resetForm();
-    }
-  },
-  { immediate: true },
+// INI TIDAK FETCH LAGI, PAKAI PROPS
+const parentCategories = computed(() =>
+  props.categories.filter((c) => !c.parent_id),
+);
+const filteredSubs = computed(() =>
+  props.categories.filter((c) => c.parent_id === selectedParentId.value),
+);
+const totalStock = computed(() =>
+  form.value.variants.reduce((s, v) => s + (Number(v.stock) || 0), 0),
 );
 
-watch(
-  () => props.isOpen,
-  (open) => {
-    if (!open) {
-      resetForm();
-    }
-  },
-);
+const addVariant = () => form.value.variants.push({ size: "", stock: 0 });
+const removeVariant = (i) => form.value.variants.splice(i, 1);
 
 const handleImageUpload = (event) => {
   const files = Array.from(event.target.files);
   files.forEach((file) => {
-    if (form.value.image.length < 5) {
+    if (imageFiles.value.length < 5) {
+      imageFiles.value.push(file);
       form.value.image.push(URL.createObjectURL(file));
     }
   });
   event.target.value = "";
 };
-
 const removeImage = (index) => {
   form.value.image.splice(index, 1);
+  imageFiles.value.splice(index, 1);
 };
 
+// watch edit tetap sama
+watch(
+  () => props.product,
+  (p) => {
+    if (props.mode === "edit" && p) {
+      form.value.name = p.name;
+      form.value.price = p.price;
+      form.value.discount_percent = p.discount_percent;
+      form.value.brand = p.brand;
+      form.value.description = p.description;
+      form.value.category_id = p.category?.id || p.category_id || "";
+      selectedParentId.value = p.category?.parent_id || "";
+      form.value.variants = p.variants?.length
+        ? p.variants.map((v) => ({ size: v.size, stock: v.stock }))
+        : [{ size: "40", stock: 5 }];
+    }
+  },
+
+  { immediate: true },
+);
+
+watch(
+  () => props.isOpen,
+  (val) => {
+    if (val && props.mode === "add") {
+      // reset form pas buka add
+      form.value = {
+        name: "",
+        price: "",
+        image: [],
+        discount_percent: 0,
+        brand: "",
+        category_id: "",
+        description: "",
+        variants: [{ size: "40", stock: 5 }],
+      };
+      imageFiles.value = [];
+      selectedParentId.value = "";
+    }
+  },
+);
+
 const handleSubmit = () => {
-  emit("saved", { ...form.value, mode: props.mode });
-  emit("close");
+  const fd = new FormData();
+  fd.append("name", form.value.name);
+  fd.append("price", form.value.price);
+  fd.append("discount_percent", form.value.discount_percent || 0);
+  fd.append("brand", form.value.brand || "");
+  fd.append("description", form.value.description || "");
+  fd.append("category_id", form.value.category_id);
+  fd.append("variants", JSON.stringify(form.value.variants));
+  imageFiles.value.forEach((f, i) => {
+    if (i === 0) fd.append("image", f);
+    else fd.append("gallery[]", f);
+  });
+  emit("saved", fd);
 };
+
+function capitalizeFirstLetter(val) {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
 </script>

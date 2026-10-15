@@ -1,5 +1,5 @@
 <template>
-  <header class="relative top-0 z-50 transition-all duration-300">
+  <header class="relative top-0 z-30 transition-all duration-300">
     <section
       :class="[
         'w-full',
@@ -14,13 +14,6 @@
         >
           <!-- LOGO + MOBILE MENU TOGGLE -->
           <div class="flex justify-between items-center w-full md:w-auto">
-            <a href="/" class="text-2xl font-bold text-secondary">
-              <img
-                src="../../../public/havenkicks-full-logo.png"
-                alt="full-logo"
-                class="w-48 h-12"
-              />
-            </a>
             <HamburgerIcon
               :isOpen="isMobileMenuOpen"
               @toggle="
