@@ -6,13 +6,13 @@
       <p class="text-base md:text-lg lg:text-2xl font-bold text-gray-800">
         Total Revenue
       </p>
-      <div class="text-xs md:text-sm lg:text-lg grid grid-cols-2">
+      <div class="text-xs md:text-sm grid grid-cols-2">
         <button
           v-for="(label, i) in buttons"
           :key="i"
           @click="selected = label"
           :class="[
-            'border p-2 cursor-pointer font-semibold transition-colors ',
+            'border px-4 py-2 cursor-pointer font-semibold transition-colors text-center ',
             selected === label
               ? 'bg-primary text-white'
               : 'hover:bg-primary-hover hover:text-white',
@@ -23,12 +23,17 @@
         </button>
       </div>
     </div>
-    <BarChart :selected="selected" />
+    <BarChart :selected="selected" :orders="orders" />
   </div>
 </template>
+
 <script setup>
 import { ref } from "vue";
 import BarChart from "./BarChart.vue";
+
+defineProps({
+  orders: { type: Array, default: () => [] },
+});
 
 const buttons = ["Weekly", "Monthly"];
 const selected = ref("Monthly");

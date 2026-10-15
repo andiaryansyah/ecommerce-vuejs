@@ -9,7 +9,6 @@ import Orders from "../app/dashboard/Orders.vue";
 import Profile from "../app/dashboard/Profile.vue";
 import DataCustomers from "../app/dashboard/DataCustomers.vue";
 import Categories from "../app/dashboard/Categories.vue";
-import Payments from "../app/dashboard/Payments.vue";
 
 const routes = [
   { path: "/", name: "LandingPage", component: LandingPage },
@@ -43,11 +42,6 @@ const routes = [
         path: "/orders",
         name: "Orders",
         component: Orders,
-      },
-      {
-        path: "/payments",
-        name: "Payments",
-        component: Payments,
       },
       {
         path: "/account/profile",

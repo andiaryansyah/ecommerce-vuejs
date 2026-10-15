@@ -60,7 +60,6 @@ const isFiltered = computed(() => {
   return !!search.value || !!statusFilter.value || !!dateFilter.value;
 });
 
-// Ini yang bikin jadi profesional: label berubah saat difilter
 const statsDisplay = computed(() => [
   {
     label: "Total Orders",
@@ -94,7 +93,7 @@ const filteredOrders = computed(() => orders.value);
 
 const loadOrders = async () => {
   loading.value = true;
-  orders.value = []; // biar data lama hilang pas loading
+  orders.value = [];
   try {
     const res = await fetchOrders({
       search: search.value,

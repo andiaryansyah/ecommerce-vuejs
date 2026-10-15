@@ -23,81 +23,189 @@
       </div>
     </div>
     <div class="py-6 grid grid-cols-1 xl:grid-cols-2 gap-2">
-      <RevenueChart />
-      <RecentOrders :orders="orders" />
+      <RevenueChart :orders="allOrders" :loading="isLoading" />
+      <RecentOrders :orders="recentOrders" :loading="isLoading" />
     </div>
   </div>
 </template>
+
 <script setup>
+import { ref, computed, onMounted } from "vue";
 import Card from "@/components/dashboard/Card.vue";
 import RevenueChart from "@/components/dashboard/RevenueChart.vue";
 import RecentOrders from "../../components/dashboard/RecentOrders.vue";
-import { orders } from "../../data/orders.js";
+import { fetchOrders } from "@/api/orders.js";
+import { fetchCustomers } from "@/api/users.js";
 
-const cardDatas = [
-  {
-    title: "revenue",
-    value: 48223,
-    change: "12.5",
-    changeType: "increase",
-    comparison: "vs last month",
-    icon: "iconmind:revenue-duotone-bold",
-  },
-  {
-    title: "users",
-    value: 12874,
-    change: "8.2",
-    changeType: "increase",
-    comparison: "vs last month",
-    icon: "carbon:user-multiple",
-  },
-  {
-    title: "orders",
-    value: 1200,
-    change: "4.1",
-    changeType: "decrease",
-    comparison: "vs last month",
-    icon: "carbon:order-server",
-  },
-  {
-    title: "views",
-    value: 224000,
-    change: "22.4",
-    changeType: "increase",
-    comparison: "vs last month",
-    icon: "carbon:view",
-  },
-];
+const allOrders = ref([]);
+const allUsers = ref([]);
+const recentOrders = ref([]);
+const isLoading = ref(true);
 
-function formatNumber(value) {
-  if (value >= 1000000) {
-    return (value / 1000000).toFixed(1) + "M";
-  } else if (value >= 1000) {
-    return (value / 1000).toFixed(0) + "K";
-  } else {
-    return value.toString();
-  }
+function calcOrdersStats(all) {
+  /* fungsi kamu yang lama, biarkan sama */
+  const paidOrders = all.filter((o) => o.status === "paid");
+  const totalRevenue = paidOrders.reduce(
+    (sum, o) => sum + Number(o.total_price),
+    0,
+  );
+  const totalOrders = all.length;
+  const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+  const thisMonthOrders = all.filter((o) => {
+    const d = new Date(o.created_at);
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  });
+  const lastMonthOrders = all.filter((o) => {
+    const d = new Date(o.created_at);
+    const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+    const lastYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+    return d.getMonth() === lastMonth && d.getFullYear() === lastYear;
+  });
+  const thisMonthRevenue = thisMonthOrders
+    .filter((o) => o.status === "paid")
+    .reduce((s, o) => s + Number(o.total_price), 0);
+  const lastMonthRevenue = lastMonthOrders
+    .filter((o) => o.status === "paid")
+    .reduce((s, o) => s + Number(o.total_price), 0);
+  const revenueChange =
+    lastMonthRevenue === 0
+      ? 0
+      : (
+          ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) *
+          100
+        ).toFixed(1);
+  const ordersChange =
+    lastMonthOrders.length === 0
+      ? 0
+      : (
+          ((thisMonthOrders.length - lastMonthOrders.length) /
+            lastMonthOrders.length) *
+          100
+        ).toFixed(1);
+  const thisMonthAOV =
+    thisMonthOrders.length > 0 ? thisMonthRevenue / thisMonthOrders.length : 0;
+  const lastMonthAOV =
+    lastMonthOrders.length > 0 ? lastMonthRevenue / lastMonthOrders.length : 0;
+  const aovChange =
+    lastMonthAOV === 0
+      ? 0
+      : (((thisMonthAOV - lastMonthAOV) / lastMonthAOV) * 100).toFixed(1);
+  return {
+    totalRevenue,
+    totalOrders,
+    avgOrderValue,
+    revenueChange,
+    ordersChange,
+    aovChange,
+  };
+}
+function calcUsersStats(all) {
+  const totalUsers = all.length;
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+  const thisMonthUsers = all.filter((u) => {
+    const d = new Date(u.created_at || u.joined_at || u.createdAt);
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  });
+  const lastMonthUsers = all.filter((u) => {
+    const d = new Date(u.created_at || u.joined_at || u.createdAt);
+    const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+    const lastYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+    return d.getMonth() === lastMonth && d.getFullYear() === lastYear;
+  });
+  const usersChange =
+    lastMonthUsers.length === 0
+      ? 0
+      : (
+          ((thisMonthUsers.length - lastMonthUsers.length) /
+            lastMonthUsers.length) *
+          100
+        ).toFixed(1);
+  return { totalUsers, thisMonthNew: thisMonthUsers.length, usersChange };
 }
 
-function formatCurrency(value) {
+// INI YANG KAMU MAU: jadi computed, default 0 pas masih loading
+const cardDatas = computed(() => {
+  const {
+    totalRevenue,
+    totalOrders,
+    avgOrderValue,
+    revenueChange,
+    ordersChange,
+    aovChange,
+  } = calcOrdersStats(allOrders.value);
+  const { totalUsers, thisMonthNew, usersChange } = calcUsersStats(
+    allUsers.value,
+  );
+  return [
+    {
+      title: "revenue",
+      value: totalRevenue,
+      change: revenueChange,
+      changeType: Number(revenueChange) >= 0 ? "increase" : "decrease",
+      comparison: "vs last month",
+      icon: "iconmind:revenue-duotone-bold",
+    },
+    {
+      title: "users",
+      value: totalUsers,
+      change: usersChange,
+      changeType: Number(usersChange) >= 0 ? "increase" : "decrease",
+      comparison: `${thisMonthNew} new this month`,
+      icon: "carbon:user-multiple",
+    },
+    {
+      title: "orders",
+      value: totalOrders,
+      change: ordersChange,
+      changeType: Number(ordersChange) >= 0 ? "increase" : "decrease",
+      comparison: "vs last month",
+      icon: "carbon:order-server",
+    },
+    {
+      title: "avg_order",
+      value: avgOrderValue,
+      change: aovChange,
+      changeType: Number(aovChange) >= 0 ? "increase" : "decrease",
+      comparison: "per order",
+      icon: "carbon:analytics",
+    },
+  ];
+});
+
+onMounted(async () => {
+  isLoading.value = true;
+  try {
+    const [ordersRes, customersRes] = await Promise.all([
+      fetchOrders({ page: 1 }),
+      fetchCustomers({ page: 1 }),
+    ]);
+    const all = ordersRes.data || ordersRes || [];
+    allUsers.value =
+      customersRes.data || customersRes.users || customersRes || [];
+    allOrders.value = all;
+    recentOrders.value = [...all]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 5);
+  } finally {
+    isLoading.value = false;
+  }
+});
+
+function formatCurrency(v) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
-    currency: "USD",
-    currencyDisplay: "symbol",
+    currency: "IDR",
     minimumFractionDigits: 0,
-  })
-    .format(value)
-    .replace("US$", "$");
+  }).format(v || 0);
 }
-
 function formattedValue(title, value) {
-  switch (title) {
-    case "revenue":
-      return formatCurrency(value);
-    case "views":
-      return formatNumber(value);
-    default:
-      return value.toString();
-  }
+  if (title === "revenue" || title === "avg_order")
+    return formatCurrency(value);
+  return (value || 0).toString();
 }
 </script>

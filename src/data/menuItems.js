@@ -30,13 +30,6 @@ export const menuItems = [
     subItems: [],
   },
   {
-    icon: "basil:invoice-outline",
-    label: "Payments",
-    visible: ["admin"],
-    href: "/payments",
-    subItems: [],
-  },
-  {
     icon: "codicon:account",
     label: "My Account",
     visible: ["user"],

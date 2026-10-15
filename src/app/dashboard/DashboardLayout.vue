@@ -1,45 +1,71 @@
 <template>
-  <div class="h-full flex relative">
+  <div class="h-screen flex bg-[#F1F5F9] overflow-hidden">
+    <!-- Overlay Mobile -->
     <div
       v-if="isOpen"
-      class="fixed inset-0 bg-black/40 z-40 md:hidden"
+      class="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
       @click="isOpen = false"
     ></div>
-    <!-- LEFT -->
-    <div
+
+    <!-- LEFT SIDEBAR -->
+    <aside
       :class="[
-        'z-50 fixed top-0 left-0 min-h-screen w-[14%] bg-linear-to-b from-[#0B132B] to-[#1C2541] text-white transition-all ease-in-out duration-300 md:relative',
+        'z-50 fixed md:sticky top-0 h-screen flex flex-col bg-[#0B132B] text-white transition-all duration-300 ease-in-out shrink-0',
         isOpen
-          ? 'translate-x-0 w-[75%] md:w-[24%] lg:w-[20%] xl:w-[16%]'
-          : '-translate-x-96 md:translate-x-0 w-64 md:w-[12%] lg:w-[12%] xl:w-[6%]',
+          ? 'translate-x-0 w-70'
+          : '-translate-x-full md:translate-x-0 md:w-18',
+        !isOpen ? 'md:w-18' : 'md:w-70',
       ]"
     >
-      <RouterLink to="/user" class="block p-4">
-        <img
-          src="../../../public/havenkicks-logo.png"
-          class="block w-11 h-8"
-          v-if="!isOpen"
-        />
-        <img
-          src="../../../public/havenkicks-full-logo.png"
-          class="w-48 h-12"
-          v-if="isOpen"
-        />
-      </RouterLink>
-      <div class="block w-full border-b border-slate-700"></div>
-      <Menu @toggleSidebar="isOpen = !isOpen" :collapsed="!isOpen" />
-    </div>
-    <!-- RIGHT -->
-    <div class="w-full overflow-auto flex flex-col">
+      <!-- Logo Area -->
+      <div
+        class="h-16 flex items-center px-4 shrink-0 border-b border-white/10"
+      >
+        <RouterLink
+          to="/admin"
+          class="flex items-center gap-3 w-full overflow-hidden"
+        >
+          <img
+            v-if="isOpen"
+            src="/havenkicks-full-logo.png"
+            class="h-10 w-auto object-contain transition-all"
+            alt="full logo"
+          />
+          <img
+            v-else
+            src="/havenkicks-logo.png"
+            class="w-9 h-9 object-contain shrink-0"
+            alt="logo"
+          />
+        </RouterLink>
+      </div>
+
+      <!-- Menu Area with proper padding -->
+      <div class="flex-1 overflow-y-auto py-4 px-3">
+        <Menu @toggleSidebar="isOpen = !isOpen" :collapsed="!isOpen" />
+      </div>
+
+      <!-- Footer tipis -->
+      <div class="p-3 border-t border-white/10">
+        <div v-if="isOpen" class="text-[10px] text-white/40 text-center">
+          © 2026 Haven Kicks
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT CONTENT -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
       <Header @toggleSidebar="isOpen = !isOpen" />
-      <router-view />
+      <main class="flex-1 overflow-y-auto p-3 md:p-6">
+        <router-view />
+      </main>
     </div>
   </div>
 </template>
+
 <script setup>
 import Menu from "@/components/dashboard/Menu.vue";
 import { ref } from "vue";
 import Header from "@/components/shared/Header.vue";
-
-const isOpen = ref(false);
+const isOpen = ref(true); // default kebuka di desktop
 </script>

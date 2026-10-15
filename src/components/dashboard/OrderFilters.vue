@@ -23,10 +23,10 @@
       >
         <option value="">All Status</option>
         <option value="pending">Pending</option>
-        <option value="processing">Processing</option>
-        <option value="shipped">Shipped</option>
-        <option value="completed">Completed</option>
-        <option value="cancelled">Cancelled</option>
+        <option value="paid">Paid</option>
+        <option value="canceled">Canceled</option>
+        <option value="failed">Failed</option>
+        <option value="expired">Expired</option>
       </select>
     </div>
     <input

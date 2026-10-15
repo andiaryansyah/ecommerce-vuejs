@@ -1,6 +1,5 @@
 <template>
   <div class="px-2 md:p-6">
-    <!-- Header -->
     <div
       class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
     >
@@ -17,7 +16,6 @@
       </button>
     </div>
 
-    <!-- Search + Filter - sekarang jadi satu di dalam tabel -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
       <div class="flex flex-col lg:flex-row gap-3">
         <div class="relative flex-1 max-w-md">
@@ -65,7 +63,7 @@
       class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
     >
       <div class="overflow-x-auto">
-        <table class="hidden md:table w-full text-left text-sm">
+        <table class="hidden md:table w-full text-left text-sm min-w-225">
           <thead>
             <tr
               class="border-b border-gray-200 bg-gray-50 text-gray-600 text-xs uppercase text-center"

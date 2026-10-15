@@ -163,7 +163,6 @@ onMounted(async () => {
       getCategories(),
     ]);
     dataProducts.value = productsData;
-    console.log("productsData : ", productsData);
     categories.value = categoriesData;
   } finally {
     isLoadingData.value = false;

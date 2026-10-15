@@ -23,27 +23,7 @@
               "
             />
           </div>
-          <!-- Search Bar -->
-          <form
-            class="w-full md:flex-1 max-w-sm"
-            role="search"
-            aria-label="Site search"
-          >
-            <label class="relative w-full">
-              <input
-                type="search"
-                placeholder="Search..."
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
-              />
-              <button
-                type="submit"
-                class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-secondary"
-                aria-label="Search Button"
-              >
-                <Icon icon="mdi:magnify" class="w-6 h-6" />
-              </button>
-            </label>
-          </form>
+
           <!-- Icons -->
           <div
             class="flex items-center justify-between gap-4 md:gap-6 w-full md:w-auto"
