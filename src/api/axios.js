@@ -1,18 +1,26 @@
 import axios from "axios";
 
+const apiUrl =
+  import.meta.env.VITE_API_URL ||
+  "https://strudel-elude-umpire.ngrok-free.dev/api";
+
+// cek ngrok
+const isNgrok =
+  apiUrl.includes("ngrok-free.dev") || apiUrl.includes("ngrok.io");
+
 const api = axios.create({
-  baseURL: "https://strudel-elude-umpire.ngrok-free.dev/api",
+  baseURL: apiUrl,
   timeout: 60000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-    "ngrok-skip-browser-warning": "true", // WAJIB, ini yang bikin kamu error tadi
+    ...(isNgrok && { "ngrok-skip-browser-warning": "true" }),
   },
 });
 
 // 1. Auto pasang Token Sanctum setiap request
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token"); // atau sessionStorage
+  const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

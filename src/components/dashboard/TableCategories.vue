@@ -14,7 +14,8 @@
         @click="emit('add-parent')"
         class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 cursor-pointer"
       >
-        <span class="text-lg leading-none">+</span> Add Category
+        <Icon icon="carbon:add-alt" class="w-5 h-5" />
+        <span class="block">Add Category</span>
       </button>
     </div>
 

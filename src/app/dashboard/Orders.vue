@@ -33,14 +33,23 @@
         />
       </div>
 
-      <OrderDetailModal :order="selectedOrder" @close="selectedOrder = null" />
+      <OrderDetailModal
+        :order="selectedOrder"
+        @close="selectedOrder = null"
+        :loading="isCanceling"
+        @cancel_order="handleCancelOrder"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { fetchOrders, fetchOrderDetail } from "../../api/orders.js";
+import {
+  fetchOrders,
+  fetchOrderDetail,
+  cancelOrder,
+} from "../../api/orders.js";
 import OrderStatus from "../../components/dashboard/OrderStatus.vue";
 import OrderFilters from "../../components/dashboard/OrderFilters.vue";
 import TableOrders from "../../components/dashboard/TableOrders.vue";
@@ -48,6 +57,7 @@ import OrderDetailModal from "../../components/dashboard/OrderDetailModal.vue";
 
 const orders = ref([]);
 const loading = ref(false);
+const isCanceling = ref(false);
 const search = ref("");
 const statusFilter = ref("");
 const dateFilter = ref("");
@@ -118,10 +128,26 @@ const loadOrders = async () => {
 
 const handleView = async (order) => {
   try {
-    const detail = await fetchOrderDetail(order.order_code || order.id);
+    const detail = await fetchOrderDetail(order.id || order.order_code);
     selectedOrder.value = detail;
+    console.log("order modal: ", detail);
   } catch {
     selectedOrder.value = order;
+  }
+};
+
+const handleCancelOrder = async (id) => {
+  if (isCanceling.value) return;
+  if (!confirm(`Cancel order ${id} ? Stok akan dikembalikan.`)) return;
+  isCanceling.value = true;
+  try {
+    await cancelOrder(id);
+    selectedOrder.value = null; // auto close
+    await loadOrders();
+  } catch (e) {
+    alert(e.response?.data?.message || "Gagal cancel");
+  } finally {
+    isCanceling.value = false;
   }
 };
 

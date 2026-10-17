@@ -191,6 +191,8 @@ onMounted(async () => {
     recentOrders.value = [...all]
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
       .slice(0, 5);
+
+    console.log("recent orders :", recentOrders.value);
   } finally {
     isLoading.value = false;
   }

@@ -148,21 +148,21 @@ const activeFilter = ref("all");
 const showFilter = ref(false);
 const filters = ["all", "paid", "pending", "canceled"];
 const mappedOrders = computed(() => {
-  return props.orders.map((o) => ({
-    id: o.id,
-    rawId: String(o.id).slice(0, 8),
+  return props.orders.map((order) => ({
+    id: order.id,
+    rawId: String(order.id).slice(0, 8),
     image:
-      o.items?.[0]?.image ||
-      o.product_image ||
-      `https://i.pravatar.cc/100?u=${o.id}`,
+      order.items?.[0]?.image ||
+      order.product_image ||
+      `https://placehold.co/100?text=${order.id}`,
     name:
-      o.items?.[0]?.name ||
-      o.customer_name ||
-      `Order ${String(o.id).slice(0, 4)}`,
-    category: o.items?.[0]?.category || o.payment_method || "order",
-    subCategory: o.items?.[0]?.sub_category || o.status,
-    price: o.total_price || 0,
-    status: o.status || "pending",
+      order.items?.[0]?.name ||
+      order.customer_name ||
+      `Order ${String(order.id).slice(0, 4)}`,
+    category: order.items?.[0]?.category || order.payment_method || "order",
+    subCategory: order.items?.[0]?.sub_category || order.status,
+    price: order.total_price || 0,
+    status: order.status || "pending",
   }));
 });
 const filteredOrders = computed(() => {

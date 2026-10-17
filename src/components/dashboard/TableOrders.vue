@@ -9,61 +9,68 @@
           <th class="px-5 py-3 text-left">Amount</th>
           <th class="px-5 py-3 text-left">Status</th>
           <th class="px-5 py-3 text-left">Date</th>
+          <th class="px-5 py-3 text-center">Action</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100">
         <tr
-          v-for="o in ordersData"
-          :key="o.id"
+          v-for="order in ordersData"
+          :key="order.id"
           class="hover:bg-gray-50/70 transition"
         >
           <td class="px-5 py-4">
             <p class="font-mono font-bold text-gray-900 text-[13px]">
-              {{ o.order_code }}
+              {{ order.order_code }}
             </p>
             <p class="text-[11px] text-gray-400 mt-0.5 truncate max-w-40">
-              ID: {{ o.transaction_id || o.snap_token?.slice(0, 8) || "-" }}
+              ID:
+              {{ order.transaction_id || order.snap_token?.slice(0, 8) || "-" }}
             </p>
           </td>
           <td class="px-5 py-4">
             <p class="font-medium text-gray-900">
-              {{ o.user?.name || "Guest" }}
+              {{ order.user?.name || "Guest" }}
             </p>
             <p class="text-xs text-gray-500 truncate max-w-45">
-              {{ o.user?.email }}
+              {{ order.user?.email }}
             </p>
             <p class="text-[11px] text-gray-400 mt-1 truncate max-w-50">
-              {{ o.shipping_address }}
+              {{ order.shipping_address }}
             </p>
           </td>
           <td class="px-5 py-4">
             <span
               class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium border"
-              :class="channelClass(o.payment_type)"
+              :class="channelClass(order.payment_type)"
             >
-              {{ formatChannel(o.payment_type) }}
+              {{ formatChannel(order.payment_type) }}
             </span>
             <p
-              v-if="o.paid_at"
+              v-if="order.paid_at"
               class="text-[10px] text-emerald-600 mt-1 font-medium"
             >
-              {{ timeAgo(o.paid_at) }} paid
+              {{ timeAgo(order.paid_at) }} paid
             </p>
             <p v-else class="text-[10px] text-gray-400 mt-1">unpaid</p>
           </td>
           <td class="px-5 py-4 font-bold text-gray-900">
-            Rp {{ format(o.total_price) }}
+            Rp {{ format(order.total_price) }}
           </td>
           <td class="px-5 py-4">
             <span
               class="px-2.5 py-1 rounded-full text-xs font-semibold border"
-              :class="statusClass(o.status)"
+              :class="statusClass(order.status)"
             >
-              {{ o.status }}
+              {{ order.status }}
             </span>
           </td>
           <td class="px-5 py-4 text-xs text-gray-600">
-            {{ formatDate(o.created_at) }}
+            {{ formatDate(order.created_at) }}
+          </td>
+          <td class="px-5 py-4 text-xs text-center">
+            <button class="cursor-pointer" @click="$emit('view', order)">
+              <Icon icon="carbon:view" class="w-5 h-5" />
+            </button>
           </td>
         </tr>
       </tbody>

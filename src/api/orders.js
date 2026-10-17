@@ -16,3 +16,8 @@ export const updateOrderStatus = async (id, status) => {
   const { data } = await axios.put(`/admin/orders/${id}/status`, { status });
   return data;
 };
+
+export const cancelOrder = async (id) => {
+  const { data } = await axios.post(`/admin/orders/${id}/cancel`);
+  return data;
+};

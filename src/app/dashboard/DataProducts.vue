@@ -61,7 +61,6 @@ const isLoadingData = ref(false);
 const toastOpen = ref(false);
 const { showToast } = useToast();
 
-// INI STATE UNTUK SEARCH & FILTER - TAMBAHIN DISINI
 const searchQuery = ref("");
 const filterCategory = ref("");
 const filterStock = ref("");
@@ -70,7 +69,6 @@ const parentCategories = computed(() =>
   categories.value.filter((c) => !c.parent_id),
 );
 
-// INI LOGIC FILTER NYA - TAMBAHIN DISINI
 const filteredProducts = computed(() => {
   let result = [...dataProducts.value];
   if (searchQuery.value) {
@@ -164,6 +162,7 @@ onMounted(async () => {
     ]);
     dataProducts.value = productsData;
     categories.value = categoriesData;
+    console.log("data products :", dataProducts.value);
   } finally {
     isLoadingData.value = false;
   }
