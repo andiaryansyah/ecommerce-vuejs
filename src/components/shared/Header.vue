@@ -59,6 +59,12 @@
               >
                 <Icon icon="mdi:account-outline" class="w-5 h-5" />
               </button>
+              <button
+                @click="emit('logout')"
+                class="px-4 py-2 rounded-xl bg-pastel-pink text-deep-red text-sm font-medium hover:bg-pastel-pink/80 border border-paleSilver"
+              >
+                Logout
+              </button>
             </aside>
           </div>
         </div>
@@ -112,7 +118,7 @@ import { useRoute } from "vue-router";
 import { navItems } from "@/data/navItems.js";
 import { menuItems } from "@/data/menuItems.js";
 
-const emit = defineEmits(["toggleSidebar"]);
+const emit = defineEmits(["toggleSidebar", "logout"]);
 
 const route = useRoute();
 const items = route.path === "/" ? navItems : menuItems;

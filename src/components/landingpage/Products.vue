@@ -1,186 +1,220 @@
 <template>
-  <section class="py-12 scroll-mt-20 bg-gray-50" id="products">
-    <main class="container mx-auto px-4">
-      <header class="flex justify-between items-center mb-8">
-        <div
-          class="flex flex-col md:flex-row md:items-center items-start space-x-4"
-        >
-          <h2 class="md:text-3xl text-2xl font-bold text-heading">
-            Featured Products
-          </h2>
-          <RouterLink
+  <section id="products" class="py-16 bg-[#FFFEF7]">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center gap-3">
+          <h2 class="text-2xl font-bold">Featured Products</h2>
+          <router-link
             to="/products"
-            class="md:text-xl text-sm font-semibold text-secondary hover:text-secondary-hover transition md:mt-1"
+            class="text-[#C5A880] hover:underline text-sm"
+            >View All →</router-link
           >
-            View All →
-          </RouterLink>
         </div>
-        <nav class="flex space-x-4" aria-label="Product carousel controls">
+        <div class="flex gap-2">
           <button
             @click="prevSlide"
-            class="p-2 rounded-full bg-white shadow-md hover:bg-secondary text-primary transition-colors"
-            aria-label="Previous slide"
+            class="p-2 rounded-full bg-white shadow-md"
           >
-            <Icon icon="line-md:arrow-small-left" width="24" height="24" />
+            <Icon icon="line-md:arrow-small-left" width="24" />
           </button>
           <button
             @click="nextSlide"
-            class="p-2 rounded-full bg-white shadow-md hover:bg-secondary text-primary transition-colors"
-            aria-label="Next slide"
+            class="p-2 rounded-full bg-white shadow-md"
           >
-            <Icon icon="line-md:arrow-small-right" width="24" height="24" />
+            <Icon icon="line-md:arrow-small-right" width="24" />
           </button>
-        </nav>
-      </header>
+        </div>
+      </div>
 
-      <section class="relative overflow-hidden">
-        <ul
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-        >
-          <li
-            v-for="product in visibleProducts"
-            :key="product.id"
-            class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:scale-105"
-          >
-            <article>
-              <figure class="relative">
-                <router-link :to="`/products/${product.slug}`">
-                  <img
-                    :src="product.image[0]"
-                    :alt="product.name"
-                    class="w-full h-64 object-cover"
-                  />
-                </router-link>
-                <figcaption
-                  v-if="product.discount > 0"
-                  class="absolute top-3 right-3 bg-danger text-white text-xs font-bold px-2 py-1 rounded-full"
-                >
-                  -{{ product.discount }}%
-                </figcaption>
-
-                <button
-                  class="absolute top-3 left-3 p-2 bg-white rounded-full shadow-md hover:bg-secondary text-primary"
-                  aria-label="Add to wishlist"
-                >
-                  <Icon icon="line-md:heart" width="18" height="18" />
-                </button>
-              </figure>
-
-              <section class="p-4">
-                <div class="flex items-center mb-2">
-                  <Icon
-                    v-for="i in 5"
-                    :key="i"
-                    icon="line-md:star"
-                    width="16"
-                    height="16"
-                    :class="
-                      i <= Math.floor(product.rating)
-                        ? 'text-yellow-400'
-                        : 'text-gray-300'
-                    "
-                  />
-                  <span class="text-sm text-gray-500 ml-1"
-                    >({{ product.rating }})</span
-                  >
-                </div>
-                <h3 class="text-lg font-semibold text-heading mb-1">
-                  {{ product.name }}
-                </h3>
-                <footer class="flex items-center justify-between">
-                  <div>
-                    <span class="text-lg font-bold text-secondary"
-                      >${{
-                        (product.price * (1 - product.discount / 100)).toFixed(
-                          2,
-                        )
-                      }}</span
-                    >
-                    <span
-                      v-if="product.discount > 0"
-                      class="text-sm text-gray-500 line-through ml-2"
-                      >${{ product.price.toFixed(2) }}</span
-                    >
-                  </div>
-                  <button
-                    class="p-2 bg-primary text-white rounded-full hover:bg-primary-hover transition-colors"
-                    aria-label="Add to cart"
-                  >
-                    <Icon
-                      icon="icon-park-solid:shopping"
-                      width="18"
-                      height="18"
-                    />
-                  </button>
-                </footer>
-              </section>
-            </article>
-          </li>
-        </ul>
-      </section>
-
-      <nav
-        class="flex justify-center mt-6 space-x-2"
-        aria-label="Carousel pagination"
+      <div
+        v-if="visibleProducts.length === 0"
+        class="grid grid-cols-2 md:grid-cols-4 gap-5"
       >
-        <button
-          v-for="index in totalSlides"
-          :key="index"
-          @click="currentSlide = index - 1"
-          :class="[
-            'w-3 h-3 rounded-full',
-            currentSlide === index - 1 ? 'bg-secondary' : 'bg-gray-400',
-          ]"
-        />
-      </nav>
-    </main>
+        <div
+          v-for="n in 4"
+          :key="n"
+          class="bg-white rounded-lg overflow-hidden shadow-sm animate-pulse"
+        >
+          <div class="aspect-square bg-gray-200"></div>
+          <div class="p-3 space-y-2">
+            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-5">
+        <div
+          v-for="product in visibleProducts"
+          :key="product.id"
+          class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition group"
+        >
+          <div class="relative aspect-square bg-gray-100 overflow-hidden">
+            <img
+              :src="getImage(product.image_url)"
+              :alt="product.name"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <button
+              @click.stop="handleWishlist(product)"
+              class="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-100 shadow-sm border active:scale-75"
+              :class="
+                isWishedLocal(product.id)
+                  ? 'bg-[#EF4444] border-[#EF4444] text-white'
+                  : 'bg-white border-gray-100 text-gray-600'
+              "
+            >
+              <Icon
+                :icon="
+                  isWishedLocal(product.id) ? 'mdi:heart' : 'mdi:heart-outline'
+                "
+                width="18"
+                height="18"
+              />
+            </button>
+          </div>
+          <div class="p-3">
+            <div class="flex items-center gap-1 text-xs text-gray-400 mb-1">
+              <div class="flex text-yellow-400">
+                <Icon
+                  v-for="i in 5"
+                  :key="i"
+                  icon="mdi:star"
+                  :class="
+                    i <= Math.round(product.rating || 0) ? '' : 'text-gray-300'
+                  "
+                  width="12"
+                />
+              </div>
+              <span>({{ product.rating || 0 }})</span>
+            </div>
+            <h3 class="font-semibold text-sm truncate">{{ product.name }}</h3>
+            <div class="flex justify-between items-center mt-2">
+              <p class="text-[#C5A880] font-bold text-sm">
+                Rp {{ Number(product.price).toLocaleString("id-ID") }}
+              </p>
+              <button
+                @click.stop="handleAddCart(product)"
+                class="h-7 px-3 rounded-full text-[11px] font-medium flex items-center justify-center gap-1 transition-all active:scale-95"
+                :class="
+                  isInCart(product.id)
+                    ? 'bg-[#E8F5E9] text-[#2E7D32] border border-[#A5D6A7]'
+                    : 'bg-[#0F172A] text-white hover:bg-black'
+                "
+              >
+                <Icon
+                  :icon="isInCart(product.id) ? 'mdi:check' : 'mdi:cart'"
+                  width="14"
+                />
+                {{ isInCart(product.id) ? "Di Keranjang" : "Add" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav
+      class="flex justify-center mt-6 space-x-2"
+      aria-label="Carousel pagination"
+    >
+      <button
+        v-for="index in totalSlides"
+        :key="index"
+        @click="currentSlide = index - 1"
+        :class="[
+          'w-3 h-3 rounded-full',
+          currentSlide === index - 1 ? 'bg-secondary' : 'bg-gray-400',
+        ]"
+      />
+    </nav>
   </section>
 </template>
+
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { products } from "../../data/products.js";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { Icon } from "@iconify/vue";
+import { useWishlistStore } from "@/stores/wishlist.js";
+import { useCartStore } from "@/stores/cart.js";
+import { useImage } from "@/composables/useImage.js";
+
+const props = defineProps({ products: { type: Array, default: () => [] } });
+const wishlistStore = useWishlistStore();
+const cartStore = useCartStore();
+const { getImage } = useImage();
 
 const currentSlide = ref(0);
 const productsPerPage = ref(4);
 
-const limitedProducts = products.slice(0, 8);
+const localWished = ref(new Set());
+watch(
+  () => wishlistStore.items,
+  (items) => {
+    const s = new Set();
+    items.forEach((w) => s.add(Number(w.product_id)));
+    localWished.value = s;
+  },
+  { immediate: true, deep: true },
+);
+const isWishedLocal = (id) => localWished.value.has(Number(id));
+const handleWishlist = (product) => {
+  const pid = Number(product.id);
+  if (localWished.value.has(pid)) localWished.value.delete(pid);
+  else localWished.value.add(pid);
+  localWished.value = new Set(localWished.value);
+  wishlistStore.toggle(product);
+};
 
-const totalSlides = computed(() =>
-  Math.ceil(limitedProducts.length / productsPerPage.value),
+const localCart = ref(new Set());
+watch(
+  () => cartStore.items,
+  (items) => {
+    const s = new Set();
+    items.forEach((c) => s.add(Number(c.product_id)));
+    localCart.value = s;
+  },
+  { immediate: true, deep: true },
 );
 
+const isInCart = (id) => localCart.value.has(Number(id));
+
+const handleAddCart = async (product) => {
+  try {
+    localCart.value.add(Number(product.id));
+    localCart.value = new Set(localCart.value);
+    await cartStore.add(product, null);
+  } catch (e) {
+    localCart.value.delete(Number(product.id));
+    localCart.value = new Set(localCart.value);
+    console.error(e);
+  }
+};
+
+const limitedProducts = computed(() => props.products.slice(0, 8));
+const totalSlides = computed(() =>
+  Math.ceil(limitedProducts.value.length / productsPerPage.value),
+);
 const visibleProducts = computed(() => {
   const start = currentSlide.value * productsPerPage.value;
-  return limitedProducts.slice(start, start + productsPerPage.value);
+  return limitedProducts.value.slice(start, start + productsPerPage.value);
 });
-
 const nextSlide = () => {
   currentSlide.value =
     currentSlide.value === totalSlides.value - 1 ? 0 : currentSlide.value + 1;
 };
-
 const prevSlide = () => {
   currentSlide.value =
     currentSlide.value === 0 ? totalSlides.value - 1 : currentSlide.value - 1;
 };
-
 const handleResize = () => {
-  if (window.innerWidth < 640) {
-    productsPerPage.value = 1;
-  } else if (window.innerWidth < 768) {
-    productsPerPage.value = 2;
-  } else if (window.innerWidth < 1024) {
-    productsPerPage.value = 3;
-  } else {
-    productsPerPage.value = 4;
-  }
+  if (window.innerWidth < 640) productsPerPage.value = 1;
+  else if (window.innerWidth < 768) productsPerPage.value = 2;
+  else if (window.innerWidth < 1024) productsPerPage.value = 3;
+  else productsPerPage.value = 4;
 };
-
 onMounted(() => {
   handleResize();
   window.addEventListener("resize", handleResize);
 });
-
 onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });

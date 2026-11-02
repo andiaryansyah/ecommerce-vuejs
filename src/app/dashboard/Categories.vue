@@ -76,11 +76,9 @@ const parentCategories = computed(() =>
   dataCategories.value.filter((c) => !c.parent_id),
 );
 
-// FILTER LOGIC PINDAH KE PARENT
 const filteredCategories = computed(() => {
   if (!searchQuery.value) return dataCategories.value;
   const q = searchQuery.value.toLowerCase();
-  // ambil parent yang namanya cocok ATAU punya sub yang cocok
   const matchingParentIds = new Set();
   dataCategories.value.forEach((c) => {
     if (c.name.toLowerCase().includes(q)) {

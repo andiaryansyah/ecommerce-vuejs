@@ -48,7 +48,7 @@ import { ref, computed, onMounted, watch } from "vue";
 import {
   fetchOrders,
   fetchOrderDetail,
-  cancelOrder,
+  adminCancelOrder,
 } from "../../api/orders.js";
 import OrderStatus from "../../components/dashboard/OrderStatus.vue";
 import OrderFilters from "../../components/dashboard/OrderFilters.vue";
@@ -65,7 +65,6 @@ const selectedOrder = ref(null);
 
 const stats = ref({ total: 0, pending: 0, completed: 0, revenue: 0 });
 
-// Cek apakah sedang difilter
 const isFiltered = computed(() => {
   return !!search.value || !!statusFilter.value || !!dateFilter.value;
 });
@@ -141,7 +140,7 @@ const handleCancelOrder = async (id) => {
   if (!confirm(`Cancel order ${id} ? Stok akan dikembalikan.`)) return;
   isCanceling.value = true;
   try {
-    await cancelOrder(id);
+    await adminCancelOrder(id);
     selectedOrder.value = null; // auto close
     await loadOrders();
   } catch (e) {

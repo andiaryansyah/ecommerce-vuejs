@@ -17,7 +17,6 @@
         !isOpen ? 'md:w-18' : 'md:w-70',
       ]"
     >
-      <!-- Logo Area -->
       <div
         class="h-16 flex items-center px-4 shrink-0 border-b border-white/10"
       >
@@ -28,7 +27,7 @@
           <img
             v-if="isOpen"
             src="/havenkicks-full-logo.png"
-            class="h-10 w-auto object-contain transition-all"
+            class="h-10 w-auto object-contain"
             alt="full logo"
           />
           <img
@@ -39,13 +38,9 @@
           />
         </RouterLink>
       </div>
-
-      <!-- Menu Area with proper padding -->
       <div class="flex-1 overflow-y-auto py-4 px-3">
         <Menu @toggleSidebar="isOpen = !isOpen" :collapsed="!isOpen" />
       </div>
-
-      <!-- Footer tipis -->
       <div class="p-3 border-t border-white/10">
         <div v-if="isOpen" class="text-[10px] text-white/40 text-center">
           © 2026 Haven Kicks
@@ -55,7 +50,22 @@
 
     <!-- RIGHT CONTENT -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-      <Header @toggleSidebar="isOpen = !isOpen" />
+      <Navbar
+        :isLoggedIn="!!auth.token"
+        :user="auth.user"
+        :cartCount="cartStore.count"
+        @toggleSidebar="isOpen = !isOpen"
+        @search="handleSearch"
+        @wishlist="handleWishlist"
+        @cart="showCartDrawer = true"
+        @logout="handleLogout"
+      />
+
+      <Cart
+        :showCartDrawer="showCartDrawer"
+        @closeCart="showCartDrawer = false"
+      />
+
       <main class="flex-1 overflow-y-auto p-3 md:p-6">
         <router-view />
       </main>
@@ -65,7 +75,38 @@
 
 <script setup>
 import Menu from "@/components/dashboard/Menu.vue";
-import { ref } from "vue";
-import Header from "@/components/shared/Header.vue";
-const isOpen = ref(true); // default kebuka di desktop
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../../stores/auth";
+import Navbar from "../../components/shared/Navbar.vue";
+import { useWishlistStore } from "@/stores/wishlist.js";
+import { useCartStore } from "@/stores/cart.js";
+import Cart from "../../components/shared/Cart.vue";
+
+const auth = useAuthStore();
+const router = useRouter();
+const wishlistStore = useWishlistStore();
+const cartStore = useCartStore();
+
+const isOpen = ref(true);
+const showCartDrawer = ref(false);
+
+const handleSearch = (query) => {
+  if (!query) return;
+  router.push({ path: "/products-list", query: { q: query } });
+};
+const handleWishlist = () => {
+  if (!auth.token) return router.push("/login");
+  router.push("/user/shopping/wishlist");
+};
+const handleLogout = async () => {
+  await auth.logout();
+};
+
+onMounted(() => {
+  if (auth.token) {
+    if (!wishlistStore.hasFetched) wishlistStore.fetch(true);
+    if (!cartStore.hasFetched) cartStore.fetch();
+  }
+});
 </script>

@@ -96,6 +96,4 @@ const categories = ref([
     alt: "Streetwear",
   },
 ]);
-
-console.log("categories:", categories);
 </script>

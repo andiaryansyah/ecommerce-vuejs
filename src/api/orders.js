@@ -1,4 +1,4 @@
-import axios from "../api/axios";
+import axios from "./axios";
 
 export const fetchOrders = async ({ search, status, date, page = 1 } = {}) => {
   const { data } = await axios.get("/admin/orders", {
@@ -17,7 +17,12 @@ export const updateOrderStatus = async (id, status) => {
   return data;
 };
 
-export const cancelOrder = async (id) => {
+export const adminCancelOrder = async (id) => {
   const { data } = await axios.post(`/admin/orders/${id}/cancel`);
+  return data;
+};
+
+export const userCancelOrder = async (id) => {
+  const { data } = await axios.post(`/orders/${id}/cancel`);
   return data;
 };

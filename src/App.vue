@@ -1,4 +1,13 @@
 <template>
   <RouterView />
 </template>
-<script setup></script>
+<script setup>
+import { onMounted } from "vue";
+import { useCartStore } from "@/stores/cart";
+
+const cartStore = useCartStore();
+
+onMounted(() => {
+  cartStore.fetch();
+});
+</script>

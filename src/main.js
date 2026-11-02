@@ -1,7 +1,14 @@
 import { createApp } from "vue";
 import { Icon } from "@iconify/vue";
+import { createPinia } from "pinia";
 import "./style.css";
 import App from "./App.vue";
 import router from "./router/index.js";
 
-createApp(App).component("Icon", Icon).use(router).mount("#app");
+const app = createApp(App);
+const pinia = createPinia();
+
+app.component("Icon", Icon);
+app.use(pinia);
+app.use(router);
+app.mount("#app");
