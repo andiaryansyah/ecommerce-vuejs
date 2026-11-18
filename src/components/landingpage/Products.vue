@@ -5,7 +5,7 @@
         <div class="flex items-center gap-3">
           <h2 class="text-2xl font-bold">Featured Products</h2>
           <router-link
-            to="/products"
+            to="/products-list"
             class="text-[#C5A880] hover:underline text-sm"
             >View All →</router-link
           >
@@ -13,13 +13,13 @@
         <div class="flex gap-2">
           <button
             @click="prevSlide"
-            class="p-2 rounded-full bg-white shadow-md"
+            class="p-2 rounded-full bg-white shadow-md hover:bg-secondary-hover"
           >
             <Icon icon="line-md:arrow-small-left" width="24" />
           </button>
           <button
             @click="nextSlide"
-            class="p-2 rounded-full bg-white shadow-md"
+            class="p-2 rounded-full bg-white shadow-md hover:bg-secondary-hover"
           >
             <Icon icon="line-md:arrow-small-right" width="24" />
           </button>

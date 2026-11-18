@@ -73,7 +73,7 @@
                 @click="cartStore.remove(item.id)"
                 class="text-gray-300 hover:text-red-500 transition -mt-1"
               >
-                <Icon icon="mdi:trash-can-outline" width="16" />
+                <Icon icon="mdi:trash-can-outline" width="20" />
               </button>
             </div>
             <p class="text-[12px] text-[#C5A880] font-bold mt-1">
@@ -92,13 +92,21 @@
                 >
                   <Icon icon="mdi:alert-circle" width="12" /> Pilih size dulu
                 </p>
+                <p
+                  v-if="cartStore.committingTempMap[item.id]"
+                  class="text-[10px] text-gray-400 font-medium mb-1.5 flex items-center gap-1"
+                >
+                  <span
+                    class="w-3 h-3 border-2 border-gray-200 border-t-black rounded-full animate-spin"
+                  ></span>
+                  Menyimpan...
+                </p>
                 <select
                   :value="getDisplaySize(item)"
                   @change="onSizeChange(item, $event)"
                   :disabled="
                     !!cartStore.committingTempMap[item.id] ||
-                    !!cartStore.updatingSizeMap[item.id] ||
-                    !!cartStore.qtyQueue[item.id]
+                    !!cartStore.updatingSizeMap[item.id]
                   "
                   class="text-[11px] border rounded-full px-3.5 py-2 bg-white w-full max-w-45 outline-none focus:border-black transition disabled:opacity-50 disabled:cursor-wait"
                   :class="
@@ -107,7 +115,7 @@
                       : 'border-gray-200'
                   "
                 >
-                  <option value="">Pilih Size</option>
+                  <option value="" hidden>Pilih Size</option>
                   <option
                     v-for="v in item.product.variants"
                     :key="v.id"
@@ -119,11 +127,11 @@
                   </option>
                 </select>
               </div>
+              <!-- SPINNER HANYA UNTUK SIZE, BUKAN QTY -->
               <div
                 v-if="
                   cartStore.updatingSizeMap[item.id] ||
-                  cartStore.committingTempMap[item.id] ||
-                  cartStore.qtyQueue[item.id]
+                  cartStore.committingTempMap[item.id]
                 "
                 class="w-4 h-4 border-2 border-gray-200 border-t-black rounded-full animate-spin"
               ></div>
@@ -131,29 +139,26 @@
 
             <div class="flex justify-between items-center mt-3.5">
               <div class="flex items-center gap-1 bg-gray-50 rounded-full p-1">
+                <!-- FIX: QTY GAK PAKAI qtyQueue BIAR BISA SPAM -->
                 <button
                   @click="cartStore.updateQty(item.id, item.quantity - 1)"
                   :disabled="
+                    item.quantity <= 1 ||
                     !!cartStore.committingTempMap[item.id] ||
-                    !!cartStore.updatingSizeMap[item.id] ||
-                    !!cartStore.qtyQueue[item.id] ||
-                    item.quantity <= 1
+                    cartStore.updatingSizeMap[item.id]
                   "
                   class="w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center text-[13px] transition disabled:opacity-30 active:scale-90 hover:bg-black hover:text-white"
                 >
                   -
                 </button>
-                <span
-                  class="text-[12px] w-7 text-center font-semibold flex justify-center"
-                >
-                  <span>{{ item.quantity }}</span>
-                </span>
+                <span class="text-[12px] w-7 text-center font-semibold">{{
+                  item.quantity
+                }}</span>
                 <button
                   @click="cartStore.updateQty(item.id, item.quantity + 1)"
                   :disabled="
                     !!cartStore.committingTempMap[item.id] ||
-                    !!cartStore.updatingSizeMap[item.id] ||
-                    !!cartStore.qtyQueue[item.id] ||
+                    cartStore.updatingSizeMap[item.id] ||
                     !item.size ||
                     item.quantity >= getStock(item)
                   "
@@ -167,7 +172,6 @@
                 :disabled="
                   !!cartStore.committingTempMap[item.id] ||
                   !!cartStore.updatingSizeMap[item.id] ||
-                  !!cartStore.qtyQueue[item.id] ||
                   cartStore.hasUnselectedSize
                 "
                 class="text-[10px] font-medium border border-gray-200 rounded-full px-3 py-1.5 hover:bg-black hover:text-white hover:border-black transition disabled:opacity-30 disabled:cursor-not-allowed"
@@ -229,7 +233,6 @@ watch(
       if (i.size && !isTemp(i.id)) {
         localSizes.value[i.id] = String(i.size);
       }
-      // kalau temp lagi committing, keep size nya biar gak kedip kosong
       if (isTemp(i.id) && i.size && cartStore.committingTempMap[i.id]) {
         localSizes.value[i.id] = String(i.size);
       }

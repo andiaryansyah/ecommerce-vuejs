@@ -3,7 +3,17 @@ html {
   scroll-behavior: smooth;
 }
 
+* {
+  font-family: "Montserrat", sans-serif !important;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
 @theme {
+  --font-sans: "Poppins", sans-serif;
   /* =========================
      BRAND
      ========================= */

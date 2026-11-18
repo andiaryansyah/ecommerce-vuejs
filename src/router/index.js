@@ -112,6 +112,12 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/checkout",
+    name: "UserCheckout",
+    component: () => import("../app/pages/Checkout.vue"),
+    meta: { requiresAuth: true, role: "user" },
+  },
 ];
 
 const router = createRouter({

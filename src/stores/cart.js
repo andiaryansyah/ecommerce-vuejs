@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import api from "@/api/axios.js";
 const isTempId = (id) => String(id).startsWith("temp_");
-const genTempId = () =>
-  `temp_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
 
 export const useCartStore = defineStore("cart", {
   state: () => ({
@@ -22,8 +20,7 @@ export const useCartStore = defineStore("cart", {
     isCheckoutDisabled: (s) =>
       s.isInitialLoading ||
       s.items.length === 0 ||
-      s.items.some((i) => !i.size) ||
-      Object.keys(s.committingTempMap).length > 0,
+      s.items.some((i) => !i.size),
     getStockForItem: () => (item) => {
       if (!item.product?.variants?.length) return 9999;
       if (!item.size) return 9999;
@@ -42,7 +39,6 @@ export const useCartStore = defineStore("cart", {
       try {
         const { data } = await api.get("/carts");
         const serverItems = data.carts || [];
-
         const localTemps = this.items.filter(
           (i) => isTempId(i.id) && (!i.size || this.committingTempMap[i.id]),
         );
@@ -55,7 +51,6 @@ export const useCartStore = defineStore("cart", {
             seen.add(key);
           }
         }
-
         const serverSizeSet = new Set(
           serverItems.map((i) => i.product_id + "_" + String(i.size)),
         );
@@ -63,13 +58,10 @@ export const useCartStore = defineStore("cart", {
           (t) =>
             !serverSizeSet.has(t.product_id + "_" + String(t.size)) || !t.size,
         );
-
-        this.items = [
-          ...serverItems,
-          ...filteredTemps.filter(
-            (t) => !t.size || this.committingTempMap[t.id],
-          ),
-        ];
+        const finalTemps = filteredTemps.filter(
+          (t) => !t.size || this.committingTempMap[t.id],
+        );
+        this.items = [...finalTemps, ...serverItems];
         this.total = data.total_price || 0;
         this.count = data.count || 0;
         this.saveCache();
@@ -85,28 +77,19 @@ export const useCartStore = defineStore("cart", {
         );
       } catch {}
     },
-
     async add(product, size = null) {
       const product_id = typeof product === "object" ? product.id : product;
       const sizeStr = size ? String(size) : null;
       if (sizeStr) {
-        const exists = this.items.some(
+        const t = this.items.find(
           (i) =>
             !isTempId(i.id) &&
             i.product_id === product_id &&
             String(i.size) === sizeStr,
         );
-        if (exists) {
-          const t = this.items.find(
-            (i) =>
-              !isTempId(i.id) &&
-              i.product_id === product_id &&
-              String(i.size) === sizeStr,
-          );
-          if (t) {
-            this.updateQty(t.id, t.quantity + 1);
-            return;
-          }
+        if (t) {
+          this.updateQty(t.id, t.quantity + 1);
+          return;
         }
       }
       this.items = this.items.filter(
@@ -129,44 +112,123 @@ export const useCartStore = defineStore("cart", {
     },
 
     updateSize(cartId, newSize) {
-      /* sama seperti sebelumnya */
-      if (isTempId(cartId)) return;
+      if (String(cartId).startsWith("temp_")) return;
       const idx = this.items.findIndex((i) => i.id === cartId);
       if (idx === -1) return;
+
       const oldSize = this.items[idx].size;
+      const oldQty = this.items[idx].quantity;
       const newSizeStr = String(newSize);
+      const productId = this.items[idx].product_id;
+
+      const dupIdx = this.items.findIndex(
+        (i) =>
+          i.id !== cartId &&
+          i.product_id === productId &&
+          String(i.size) === newSizeStr,
+      );
+
+      if (dupIdx !== -1) {
+        const dupId = this.items[dupIdx].id;
+        // --- FIX STOCK LIMIT START ---
+        const maxStock = this.getStockForItem({
+          product: this.items[dupIdx].product,
+          size: newSizeStr,
+        });
+        let mergeQty = (this.items[dupIdx].quantity || 0) + (oldQty || 1);
+        if (mergeQty > maxStock) mergeQty = maxStock;
+        // --- FIX STOCK LIMIT END ---
+
+        this.items[dupIdx].quantity = mergeQty;
+        this.items.splice(idx, 1);
+        this.count = this.items.reduce((s, it) => s + (it.quantity || 0), 0);
+        this.total = this.items.reduce(
+          (s, it) => s + (it.quantity || 0) * Number(it.product?.price || 0),
+          0,
+        );
+
+        if (this.qtyQueue[cartId]) {
+          clearTimeout(this.qtyQueue[cartId].timeoutId);
+          delete this.qtyQueue[cartId];
+        }
+        if (this.sizeQueue[cartId]) {
+          clearTimeout(this.sizeQueue[cartId].timeoutId);
+          delete this.sizeQueue[cartId];
+        }
+
+        this.updatingSizeMap[cartId] = true;
+
+        (async () => {
+          try {
+            await api.put(`/carts/${dupId}`, {
+              size: newSizeStr,
+              quantity: mergeQty,
+            });
+            await api.delete(`/carts/${cartId}`);
+            const { data } = await api.get("/carts");
+            const temps = this.items.filter((i) =>
+              String(i.id).startsWith("temp_"),
+            );
+            this.items = [...temps, ...(data.carts || [])];
+            this.total = data.total_price;
+            this.count = data.count;
+          } catch {
+            await this.fetch();
+          } finally {
+            delete this.updatingSizeMap[cartId];
+          }
+        })();
+        return;
+      }
+
       this.items[idx].size = newSizeStr;
-      this.pendingSize[cartId] = newSizeStr;
-      this.updatingSizeMap[cartId] = true;
-      this.saveCache();
+      this.items[idx].quantity = 1;
+      this.count += 1 - oldQty;
+      this.total += (1 - oldQty) * Number(this.items[idx].product?.price || 0);
+
+      if (this.qtyQueue[cartId]) {
+        clearTimeout(this.qtyQueue[cartId].timeoutId);
+        delete this.qtyQueue[cartId];
+      }
       if (this.sizeQueue[cartId]) {
         clearTimeout(this.sizeQueue[cartId].timeoutId);
         this.sizeQueue[cartId].controller?.abort();
       }
+
+      this.pendingSize[cartId] = newSizeStr;
+      this.pendingQty[cartId] = 1;
+      this.updatingSizeMap[cartId] = true;
+
       const controller = new AbortController();
       const timeoutId = setTimeout(async () => {
         try {
           await api.put(
             `/carts/${cartId}`,
-            { size: this.pendingSize[cartId] },
+            { size: newSizeStr, quantity: 1 },
             { signal: controller.signal },
           );
           const { data } = await api.get("/carts");
-          const temps = this.items.filter((i) => isTempId(i.id));
-          this.items = [...(data.carts || []), ...temps];
+          const temps = this.items.filter((i) =>
+            String(i.id).startsWith("temp_"),
+          );
+          this.items = [...temps, ...(data.carts || [])];
           this.total = data.total_price;
           this.count = data.count;
         } catch (e) {
-          const c =
+          const canceled =
             e.name === "CanceledError" ||
             e.code === "ERR_CANCELED" ||
             e.name === "AbortError";
-          if (!c) this.items[idx].size = oldSize;
+          if (!canceled) {
+            this.items[idx].size = oldSize;
+            this.items[idx].quantity = oldQty;
+            await this.fetch();
+          }
         } finally {
           delete this.sizeQueue[cartId];
           delete this.pendingSize[cartId];
+          delete this.pendingQty[cartId];
           delete this.updatingSizeMap[cartId];
-          this.saveCache();
         }
       }, 200);
       this.sizeQueue[cartId] = { timeoutId, controller };
@@ -180,8 +242,7 @@ export const useCartStore = defineStore("cart", {
       const maxStock = this.getStockForItem(this.items[idx]);
       if (newQty > maxStock) newQty = maxStock;
       const oldQty = this.items[idx].quantity;
-      const oldCount = this.count;
-      const oldTotal = this.total;
+      if (oldQty === newQty) return;
       this.items[idx].quantity = newQty;
       this.count += newQty - oldQty;
       this.total +=
@@ -210,22 +271,14 @@ export const useCartStore = defineStore("cart", {
             e.name === "AbortError";
           if (c) return;
           this.items[idx].quantity = oldQty;
-          this.count = oldCount;
-          this.total = oldTotal;
           await this.fetch();
         } finally {
           delete this.qtyQueue[cartId];
           delete this.pendingQty[cartId];
           this.saveCache();
         }
-      }, 300);
-      this.qtyQueue[cartId] = {
-        timeoutId,
-        controller,
-        oldQty,
-        oldTotal,
-        oldCount,
-      };
+      }, 350);
+      this.qtyQueue[cartId] = { timeoutId, controller };
     },
 
     async remove(id) {
@@ -262,42 +315,103 @@ export const useCartStore = defineStore("cart", {
     duplicateWithNewSize(item) {
       if (
         this.items.some(
-          (i) => isTempId(i.id) && i.product_id === item.product_id && !i.size,
+          (i) =>
+            String(i.id).startsWith("temp_") &&
+            i.product_id === item.product_id &&
+            !i.size,
         )
       )
         return;
-      if (this.isQtyUpdating(item.id) || this.isSizeUpdating(item.id)) return;
-      this.items.push({
-        id: genTempId(),
+      const newItem = {
+        id: `temp_${Date.now()}`,
         product_id: item.product_id,
         product: item.product,
         size: "",
         quantity: 1,
         product_variant_id: null,
-      });
-      this.saveCache();
+      };
+      this.items.unshift(newItem);
+      try {
+        localStorage.setItem(
+          "cart_cache",
+          JSON.stringify(
+            this.items.filter((i) => !String(i.id).startsWith("temp_")),
+          ),
+        );
+      } catch {}
     },
 
     async commitTempWithSize(tempId, size) {
       const idx = this.items.findIndex((i) => i.id === tempId);
       if (idx === -1) return;
+      const sizeStr = String(size);
+      const productId = this.items[idx].product_id;
+      const tempQty = this.items[idx].quantity || 1;
 
-      this.items[idx].size = String(size);
+      const dupIdx = this.items.findIndex(
+        (i) =>
+          i.id !== tempId &&
+          i.product_id === productId &&
+          String(i.size) === sizeStr,
+      );
+
+      if (dupIdx !== -1) {
+        const dupId = this.items[dupIdx].id;
+        // --- FIX STOCK LIMIT START ---
+        const maxStock = this.getStockForItem({
+          product: this.items[dupIdx].product,
+          size: sizeStr,
+        });
+        let mergeQty = (this.items[dupIdx].quantity || 0) + tempQty;
+        if (mergeQty > maxStock) mergeQty = maxStock;
+        // --- FIX STOCK LIMIT END ---
+
+        this.items[dupIdx].quantity = mergeQty;
+        this.items.splice(idx, 1);
+        this.committingTempMap[tempId] = true;
+        try {
+          await api.put(`/carts/${dupId}`, { quantity: mergeQty });
+          const { data } = await api.get("/carts");
+          const temps = this.items.filter((i) =>
+            String(i.id).startsWith("temp_"),
+          );
+          this.items = [...temps, ...(data.carts || [])];
+          this.total = data.total_price;
+          this.count = data.count;
+        } finally {
+          delete this.committingTempMap[tempId];
+        }
+        return;
+      }
+
+      this.items[idx].size = sizeStr;
       this.committingTempMap[tempId] = true;
-      this.saveCache();
       try {
         await api.post("/carts", {
-          product_id: this.items[idx].product_id,
-          size: String(size),
-          quantity: 1,
+          product_id: productId,
+          size: sizeStr,
+          quantity: tempQty,
         });
-        await this.fetch();
-        delete this.committingTempMap[tempId];
+        const { data } = await api.get("/carts");
+        const serverItems = data.carts || [];
+        const newServerItem = serverItems.find(
+          (s) => s.product_id === productId && String(s.size) === sizeStr,
+        );
+        if (newServerItem) {
+          this.items[idx] = newServerItem;
+        } else {
+          const temps = this.items.filter(
+            (i) => String(i.id).startsWith("temp_") && i.id !== tempId,
+          );
+          this.items = [...temps, ...serverItems];
+        }
+        this.total = data.total_price;
+        this.count = data.count;
       } catch (e) {
         this.items[idx].size = "";
-        delete this.committingTempMap[tempId];
-        this.saveCache();
         throw e;
+      } finally {
+        delete this.committingTempMap[tempId];
       }
     },
   },
